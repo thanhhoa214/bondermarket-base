@@ -1,0 +1,310 @@
+{
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "sender",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amount0",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amount1",
+          "type": "uint256"
+        },
+        {
+          "internalType": "bytes",
+          "name": "data",
+          "type": "bytes"
+        }
+      ],
+      "name": "uniswapV2Call",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "bytecode": {
+    "object": "0x",
+    "sourceMap": "",
+    "linkReferences": {}
+  },
+  "deployedBytecode": {
+    "object": "0x",
+    "sourceMap": "",
+    "linkReferences": {}
+  },
+  "methodIdentifiers": {
+    "uniswapV2Call(address,uint256,uint256,bytes)": "10d1e85c"
+  },
+  "rawMetadata": "{\"compiler\":{\"version\":\"0.8.20+commit.a1b79de6\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"amount0\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"amount1\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"}],\"name\":\"uniswapV2Call\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"src/interface/IUniswapV2Callee.sol\":\"IUniswapV2Callee\"},\"evmVersion\":\"paris\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[\":@openzeppelin/=node_modules/@openzeppelin/\",\":@uniswap/=node_modules/@uniswap/\",\":forge-std/=lib/forge-std/src/\",\":src/=src/\"],\"viaIR\":true},\"sources\":{\"src/interface/IUniswapV2Callee.sol\":{\"keccak256\":\"0xacb20e2db2af6813dd19f970fd1b94675e38e52cc9c7bdc3b20cf2a577374265\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://e1e4bd8345802737c7849258af28d9343e16fb526b31497b07cbd475dfd6ff98\",\"dweb:/ipfs/QmdBP2NCqaXu9Ymfezh5cbYHFe9xVfCxLjrig2WdHDg9xF\"]}},\"version\":1}",
+  "metadata": {
+    "compiler": {
+      "version": "0.8.20+commit.a1b79de6"
+    },
+    "language": "Solidity",
+    "output": {
+      "abi": [
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "sender",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "amount0",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "amount1",
+              "type": "uint256"
+            },
+            {
+              "internalType": "bytes",
+              "name": "data",
+              "type": "bytes"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "uniswapV2Call"
+        }
+      ],
+      "devdoc": {
+        "kind": "dev",
+        "methods": {},
+        "version": 1
+      },
+      "userdoc": {
+        "kind": "user",
+        "methods": {},
+        "version": 1
+      }
+    },
+    "settings": {
+      "remappings": [
+        "@openzeppelin/=node_modules/@openzeppelin/",
+        "@uniswap/=node_modules/@uniswap/",
+        "forge-std/=lib/forge-std/src/",
+        "src/=src/"
+      ],
+      "optimizer": {
+        "enabled": true,
+        "runs": 200
+      },
+      "metadata": {
+        "bytecodeHash": "ipfs"
+      },
+      "compilationTarget": {
+        "src/interface/IUniswapV2Callee.sol": "IUniswapV2Callee"
+      },
+      "libraries": {},
+      "viaIR": true
+    },
+    "sources": {
+      "src/interface/IUniswapV2Callee.sol": {
+        "keccak256": "0xacb20e2db2af6813dd19f970fd1b94675e38e52cc9c7bdc3b20cf2a577374265",
+        "urls": [
+          "bzz-raw://e1e4bd8345802737c7849258af28d9343e16fb526b31497b07cbd475dfd6ff98",
+          "dweb:/ipfs/QmdBP2NCqaXu9Ymfezh5cbYHFe9xVfCxLjrig2WdHDg9xF"
+        ],
+        "license": "MIT"
+      }
+    },
+    "version": 1
+  },
+  "ast": {
+    "absolutePath": "src/interface/IUniswapV2Callee.sol",
+    "id": 41968,
+    "exportedSymbols": {
+      "IUniswapV2Callee": [
+        41967
+      ]
+    },
+    "nodeType": "SourceUnit",
+    "src": "32:159:41",
+    "nodes": [
+      {
+        "id": 41955,
+        "nodeType": "PragmaDirective",
+        "src": "32:24:41",
+        "nodes": [],
+        "literals": [
+          "solidity",
+          "^",
+          "0.8",
+          ".20"
+        ]
+      },
+      {
+        "id": 41967,
+        "nodeType": "ContractDefinition",
+        "src": "58:132:41",
+        "nodes": [
+          {
+            "id": 41966,
+            "nodeType": "FunctionDefinition",
+            "src": "91:97:41",
+            "nodes": [],
+            "functionSelector": "10d1e85c",
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "uniswapV2Call",
+            "nameLocation": "100:13:41",
+            "parameters": {
+              "id": 41964,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 41957,
+                  "mutability": "mutable",
+                  "name": "sender",
+                  "nameLocation": "122:6:41",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 41966,
+                  "src": "114:14:41",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 41956,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "114:7:41",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 41959,
+                  "mutability": "mutable",
+                  "name": "amount0",
+                  "nameLocation": "135:7:41",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 41966,
+                  "src": "130:12:41",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 41958,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "130:4:41",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 41961,
+                  "mutability": "mutable",
+                  "name": "amount1",
+                  "nameLocation": "149:7:41",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 41966,
+                  "src": "144:12:41",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 41960,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "144:4:41",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 41963,
+                  "mutability": "mutable",
+                  "name": "data",
+                  "nameLocation": "173:4:41",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 41966,
+                  "src": "158:19:41",
+                  "stateVariable": false,
+                  "storageLocation": "calldata",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes_calldata_ptr",
+                    "typeString": "bytes"
+                  },
+                  "typeName": {
+                    "id": 41962,
+                    "name": "bytes",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "158:5:41",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes_storage_ptr",
+                      "typeString": "bytes"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "113:65:41"
+            },
+            "returnParameters": {
+              "id": 41965,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "187:0:41"
+            },
+            "scope": 41967,
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          }
+        ],
+        "abstract": false,
+        "baseContracts": [],
+        "canonicalName": "IUniswapV2Callee",
+        "contractDependencies": [],
+        "contractKind": "interface",
+        "fullyImplemented": false,
+        "linearizedBaseContracts": [
+          41967
+        ],
+        "name": "IUniswapV2Callee",
+        "nameLocation": "68:16:41",
+        "scope": 41968,
+        "usedErrors": [],
+        "usedEvents": []
+      }
+    ],
+    "license": "MIT"
+  },
+  "id": 41
+}

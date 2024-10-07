@@ -1,0 +1,6 @@
+
+# Dotenv file
+**/*.env
+
+# trash
+**/*.DS_Store

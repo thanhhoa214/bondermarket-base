@@ -1,0 +1,199 @@
+{
+  "abi": [
+    {
+      "inputs": [],
+      "name": "getSwapFee",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "swapFee",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "bytecode": {
+    "object": "0x",
+    "sourceMap": "",
+    "linkReferences": {}
+  },
+  "deployedBytecode": {
+    "object": "0x",
+    "sourceMap": "",
+    "linkReferences": {}
+  },
+  "methodIdentifiers": {
+    "getSwapFee()": "d4cadf68"
+  },
+  "rawMetadata": "{\"compiler\":{\"version\":\"0.8.20+commit.a1b79de6\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"name\":\"getSwapFee\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"swapFee\",\"type\":\"uint256\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"src/interface/IBonderV1BetFactory.sol\":\"IBonderV1BetFactory\"},\"evmVersion\":\"paris\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[\":@openzeppelin/=node_modules/@openzeppelin/\",\":@uniswap/=node_modules/@uniswap/\",\":forge-std/=lib/forge-std/src/\",\":src/=src/\"],\"viaIR\":true},\"sources\":{\"src/interface/IBonderV1BetFactory.sol\":{\"keccak256\":\"0xf8397c0196f4e831045e1495a71363996c525c31dbaa6415ebd0fa2c6bced8f6\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://bea160850ffbb1155dce6d57fcf72616c657464f29b442f627092b4a0beeded3\",\"dweb:/ipfs/QmQnEVn9fpvFKpPQPJ9ATKcVgmiaEdME1oq34mwo2QVyrt\"]}},\"version\":1}",
+  "metadata": {
+    "compiler": {
+      "version": "0.8.20+commit.a1b79de6"
+    },
+    "language": "Solidity",
+    "output": {
+      "abi": [
+        {
+          "inputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "getSwapFee",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "swapFee",
+              "type": "uint256"
+            }
+          ]
+        }
+      ],
+      "devdoc": {
+        "kind": "dev",
+        "methods": {},
+        "version": 1
+      },
+      "userdoc": {
+        "kind": "user",
+        "methods": {},
+        "version": 1
+      }
+    },
+    "settings": {
+      "remappings": [
+        "@openzeppelin/=node_modules/@openzeppelin/",
+        "@uniswap/=node_modules/@uniswap/",
+        "forge-std/=lib/forge-std/src/",
+        "src/=src/"
+      ],
+      "optimizer": {
+        "enabled": true,
+        "runs": 200
+      },
+      "metadata": {
+        "bytecodeHash": "ipfs"
+      },
+      "compilationTarget": {
+        "src/interface/IBonderV1BetFactory.sol": "IBonderV1BetFactory"
+      },
+      "libraries": {},
+      "viaIR": true
+    },
+    "sources": {
+      "src/interface/IBonderV1BetFactory.sol": {
+        "keccak256": "0xf8397c0196f4e831045e1495a71363996c525c31dbaa6415ebd0fa2c6bced8f6",
+        "urls": [
+          "bzz-raw://bea160850ffbb1155dce6d57fcf72616c657464f29b442f627092b4a0beeded3",
+          "dweb:/ipfs/QmQnEVn9fpvFKpPQPJ9ATKcVgmiaEdME1oq34mwo2QVyrt"
+        ],
+        "license": "MIT"
+      }
+    },
+    "version": 1
+  },
+  "ast": {
+    "absolutePath": "src/interface/IBonderV1BetFactory.sol",
+    "id": 41444,
+    "exportedSymbols": {
+      "IBonderV1BetFactory": [
+        41443
+      ]
+    },
+    "nodeType": "SourceUnit",
+    "src": "32:121:36",
+    "nodes": [
+      {
+        "id": 41437,
+        "nodeType": "PragmaDirective",
+        "src": "32:24:36",
+        "nodes": [],
+        "literals": [
+          "solidity",
+          ">=",
+          "0.5",
+          ".0"
+        ]
+      },
+      {
+        "id": 41443,
+        "nodeType": "ContractDefinition",
+        "src": "58:94:36",
+        "nodes": [
+          {
+            "id": 41442,
+            "nodeType": "FunctionDefinition",
+            "src": "94:56:36",
+            "nodes": [],
+            "functionSelector": "d4cadf68",
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getSwapFee",
+            "nameLocation": "103:10:36",
+            "parameters": {
+              "id": 41438,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "113:2:36"
+            },
+            "returnParameters": {
+              "id": 41441,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 41440,
+                  "mutability": "mutable",
+                  "name": "swapFee",
+                  "nameLocation": "141:7:36",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 41442,
+                  "src": "133:15:36",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 41439,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "133:7:36",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "132:17:36"
+            },
+            "scope": 41443,
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          }
+        ],
+        "abstract": false,
+        "baseContracts": [],
+        "canonicalName": "IBonderV1BetFactory",
+        "contractDependencies": [],
+        "contractKind": "interface",
+        "fullyImplemented": false,
+        "linearizedBaseContracts": [
+          41443
+        ],
+        "name": "IBonderV1BetFactory",
+        "nameLocation": "68:19:36",
+        "scope": 41444,
+        "usedErrors": [],
+        "usedEvents": []
+      }
+    ],
+    "license": "MIT"
+  },
+  "id": 36
+}

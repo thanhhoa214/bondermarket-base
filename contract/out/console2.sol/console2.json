@@ -1,0 +1,68 @@
+{
+  "abi": [],
+  "bytecode": {
+    "object": "0x",
+    "linkReferences": {}
+  },
+  "deployedBytecode": {
+    "object": "0x",
+    "linkReferences": {}
+  },
+  "ast": {
+    "absolutePath": "lib/forge-std/src/console2.sol",
+    "id": 24079,
+    "exportedSymbols": {
+      "console2": [
+        24074
+      ]
+    },
+    "nodeType": "SourceUnit",
+    "src": "32:85:15",
+    "nodes": [
+      {
+        "id": 24076,
+        "nodeType": "PragmaDirective",
+        "src": "32:32:15",
+        "nodes": [],
+        "literals": [
+          "solidity",
+          ">=",
+          "0.4",
+          ".22",
+          "<",
+          "0.9",
+          ".0"
+        ]
+      },
+      {
+        "id": 24078,
+        "nodeType": "ImportDirective",
+        "src": "66:50:15",
+        "nodes": [],
+        "absolutePath": "lib/forge-std/src/console.sol",
+        "file": "./console.sol",
+        "nameLocation": "-1:-1:-1",
+        "scope": 24079,
+        "sourceUnit": 24075,
+        "symbolAliases": [
+          {
+            "foreign": {
+              "id": 24077,
+              "name": "console",
+              "nodeType": "Identifier",
+              "overloadedDeclarations": [],
+              "referencedDeclaration": 24074,
+              "src": "74:7:15",
+              "typeDescriptions": {}
+            },
+            "local": "console2",
+            "nameLocation": "-1:-1:-1"
+          }
+        ],
+        "unitAlias": ""
+      }
+    ],
+    "license": "MIT"
+  },
+  "id": 15
+}

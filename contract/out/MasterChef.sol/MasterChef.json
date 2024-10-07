@@ -1,0 +1,34 @@
+{
+  "abi": [],
+  "bytecode": {
+    "object": "0x",
+    "linkReferences": {}
+  },
+  "deployedBytecode": {
+    "object": "0x",
+    "linkReferences": {}
+  },
+  "ast": {
+    "absolutePath": "src/wip/MasterChef.sol",
+    "id": 49019,
+    "exportedSymbols": {},
+    "nodeType": "SourceUnit",
+    "src": "32:68570:58",
+    "nodes": [
+      {
+        "id": 49018,
+        "nodeType": "PragmaDirective",
+        "src": "32:24:58",
+        "nodes": [],
+        "literals": [
+          "solidity",
+          "^",
+          "0.8",
+          ".20"
+        ]
+      }
+    ],
+    "license": "MIT"
+  },
+  "id": 58
+}
