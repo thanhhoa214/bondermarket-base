@@ -19,7 +19,6 @@ export default function Navbar() {
   const links = [
     { href: '/', label: 'Markets' },
     { href: '/create', label: 'Create' },
-    { href: '/pool', label: 'Pool' },
     { href: '/portfolio', label: 'Portfolio' },
   ];
 

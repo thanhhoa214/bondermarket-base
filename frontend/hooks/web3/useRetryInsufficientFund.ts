@@ -1,7 +1,6 @@
 import { ErrorCode, MetamaskErrorCode, TxError } from '@/lib/errors/error-dictionary';
 import { bonderBaseUsdcConfig, useReadBonderBaseUsdcDecimals } from '@/lib/web3/generated';
 import { wagmiClientConfig } from '@/lib/web3/wagmiConfig';
-import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { waitForTransactionReceipt, writeContract } from '@wagmi/core';
 import { useState } from 'react';
 import { toast } from 'sonner';
@@ -23,12 +22,11 @@ export function useRetryInsufficientFund({
   const [pending, setPending] = useState(false);
 
   const { isConnected } = useAccount();
-  const { openConnectModal } = useConnectModal();
   const { data: decimals } = useReadBonderBaseUsdcDecimals();
 
   const handleBuy = async () => {
     if (!isConnected) {
-      openConnectModal?.();
+      toast.warning('Please connect your wallet first');
       return ErrorCode.WALLET_NOT_CONNECTED;
     }
 

@@ -1,6 +1,7 @@
 import { Toaster } from '@/components/ui/sonner';
 import Navbar from '@/components/ui2/Navbar';
 import { cn } from '@/lib/utils';
+import '@coinbase/onchainkit/styles.css';
 import { Analytics } from '@vercel/analytics/next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import type { Metadata } from 'next';
@@ -49,11 +50,10 @@ export default function RootLayout({ children }: PropsWithChildren) {
           <Toaster
             toastOptions={{
               classNames: {
-                toast: 'items-start',
-                error: 'bg-red-400',
-                success: 'text-green-400',
-                warning: 'text-yellow-400',
-                info: 'bg-blue-400',
+                error: 'bg-red-400 border-red-500',
+                success: 'bg-green-300 border-green-500',
+                warning: 'bg-yellow-300 border-yellow-500',
+                info: 'bg-blue-300 border-blue-500',
               },
             }}
           />

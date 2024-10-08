@@ -1,75 +1,71 @@
 'use client';
 
 import { endSession, startSession } from '@/app/actions/user.actions';
+import { cn } from '@/lib/utils';
 import { emojiAvatarForAddress } from '@/lib/web3/emojiAvatarForAddress';
-import { useAccountModal, useChainModal, useConnectModal } from '@rainbow-me/rainbowkit';
-import { ArrowLeftRight } from 'lucide-react';
+import { Avatar, EthBalance, Identity, Name } from '@coinbase/onchainkit/identity';
+import {
+  ConnectWallet,
+  Wallet,
+  WalletDropdown,
+  WalletDropdownBasename,
+  WalletDropdownDisconnect,
+  WalletDropdownFundLink,
+  WalletDropdownLink,
+} from '@coinbase/onchainkit/wallet';
 import { useEffect } from 'react';
 import { useAccount, useChainId, useChains } from 'wagmi';
-import { Button, ButtonProps } from '../ui/button';
 
-function truncateAddress(address?: string) {
-  if (!address) return '';
-  return `${address.slice(0, 6)}...${address.slice(-4)}`;
-}
-
-export const ConnectWalletButton = (props: ButtonProps) => {
+const DefaultWalletAvatar = ({ address = '', className = '' }: { address?: string; className?: string }) => {
+  const { color: backgroundColor, emoji } = emojiAvatarForAddress(address);
+  return (
+    <span
+      className={cn('h-6 w-6 rounded-full inline-flex justify-center items-center text-lg', className)}
+      style={{ backgroundColor: `${backgroundColor}90` }}
+    >
+      {emoji}
+    </span>
+  );
+};
+export const ConnectWalletButton = ({ className }: { className?: string }) => {
   const account = useAccount();
-  const { color: backgroundColor, emoji } = emojiAvatarForAddress(account?.address ?? '');
   const chains = useChains();
   const chainId = useChainId();
   const chain = chains.find((c) => c.id === chainId);
-  const { openConnectModal } = useConnectModal();
-  const { openAccountModal } = useAccountModal();
-  const { openChainModal } = useChainModal();
 
   useEffect(() => {
     if (account.isConnected && account.address) startSession(account.address);
     else endSession();
-  }, [account.isConnected, account.address, chainId]);
+  }, [account.isConnected, account.address]);
 
-  if (account.isConnected) {
-    return (
-      <div className="inline-flex items-center justify-end gap-2">
-        <Button
-          variant={'outline'}
-          onClick={() => openAccountModal?.()}
-          className="px-1 gap-1 border-primary bg-primary/30 hover:bg-primary/60"
-        >
-          <span
-            className="h-7 w-7 rounded-full inline-flex justify-center items-center text-2xl hover:scale-110 m-1"
-            style={{ backgroundColor: `${backgroundColor}90` }}
-          >
-            {emoji}
-          </span>
-
-          <span className="inline-flex flex-col text-left pr-3">
-            <strong className="font-semibold text-sm leading-4">
-              {chain?.name}
-              <ArrowLeftRight
-                size={14}
-                className="ml-1 inline-block hover:scale-125"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  openChainModal?.();
-                }}
-              />
-            </strong>
-            <span className="text-xs leading-3">{truncateAddress(account.address)}</span>
-          </span>
-        </Button>
-      </div>
-    );
-  }
   return (
-    <Button
-      {...props}
-      onClick={() => {
-        console.log('openConnectModal');
-        openConnectModal?.();
-      }}
-    >
-      Connect Wallet
-    </Button>
+    <Wallet>
+      <ConnectWallet
+        className={cn(
+          'h-10 px-3 py-1 bg-primary text-primary-foreground hover:bg-primary/90 transition-transform hover:scale-105',
+          className,
+        )}
+      >
+        <Avatar className="h-6 w-6" defaultComponent={<DefaultWalletAvatar address={account.address} />} />
+
+        <span className="inline-flex flex-col text-left pr-2 -mt-1">
+          <strong className="text-foreground/70 font-normal text-xs leading-4">{chain?.name}</strong>
+          <Name className="text-foreground text-xs leading-3 font-semibold" />
+        </span>
+      </ConnectWallet>
+      <WalletDropdown>
+        <Identity className="px-4 pt-3 pb-2" hasCopyAddressOnClick>
+          <Avatar />
+          <Name />
+          <EthBalance />
+        </Identity>
+        <WalletDropdownBasename />
+        <WalletDropdownLink icon="wallet" href="https://keys.coinbase.com">
+          Wallet
+        </WalletDropdownLink>
+        <WalletDropdownFundLink />
+        <WalletDropdownDisconnect />
+      </WalletDropdown>
+    </Wallet>
   );
 };

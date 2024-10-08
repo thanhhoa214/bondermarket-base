@@ -1,10 +1,10 @@
 'use client';
-import { darkTheme, RainbowKitProvider } from '@rainbow-me/rainbowkit';
-import '@rainbow-me/rainbowkit/styles.css';
+import { OnchainKitProvider } from '@coinbase/onchainkit';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import type { PropsWithChildren } from 'react';
-import { abstractTestnet } from 'viem/chains';
 import { WagmiProvider } from 'wagmi';
+import { baseSepolia } from 'wagmi/chains';
+import env from '../env/public';
 import { wagmiClientConfig } from './wagmiConfig';
 
 const queryClient = new QueryClient();
@@ -13,9 +13,9 @@ export default function Web3Provider({ children }: PropsWithChildren) {
   return (
     <WagmiProvider config={wagmiClientConfig}>
       <QueryClientProvider client={queryClient}>
-        <RainbowKitProvider theme={darkTheme()} showRecentTransactions={true} initialChain={abstractTestnet}>
+        <OnchainKitProvider apiKey={env.NEXT_PUBLIC_ONCHAINKIT_API_KEY} chain={baseSepolia as any}>
           {children}
-        </RainbowKitProvider>
+        </OnchainKitProvider>
       </QueryClientProvider>
     </WagmiProvider>
   );
