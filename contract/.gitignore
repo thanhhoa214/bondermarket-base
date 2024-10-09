@@ -2,7 +2,7 @@
 node_modules/
 build/
 cache/
-out/
+# out/ We want to upload out
 
 # Ignores development broadcast logs
 !/broadcast
@@ -12,12 +12,9 @@ out/
 # Docs
 docs/
 
-# Dotenv file
-.env
-
 # Environment files
 .env
-.env.*
+
 
 
 # OS files
