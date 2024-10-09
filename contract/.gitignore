@@ -1,4 +1,6 @@
-# Compiler files
+# Build and compiler and dependency directories
+node_modules/
+build/
 cache/
 out/
 
@@ -12,3 +14,13 @@ docs/
 
 # Dotenv file
 .env
+
+# Environment files
+.env
+.env.*
+
+
+# OS files
+.DS_Store
+Thumbs.db
+
