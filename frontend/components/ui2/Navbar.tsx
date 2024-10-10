@@ -8,6 +8,7 @@ import { usePathname } from 'next/navigation';
 import TelegramIcon from '../icons/telegram';
 import XIcon from '../icons/x';
 import { ConnectWalletButton } from './ConnectWalletButton';
+import FaucetButton from './FaucetButton';
 import LogoIcon from './LogoIcon';
 import SuperSearch from './SuperSearch';
 
@@ -34,6 +35,7 @@ export default function Navbar() {
         </div>
         <SuperSearch />
         <div className="hidden md:flex items-center gap-4 ml-auto md:gap-2 lg:gap-4">
+          <FaucetButton />
           <ConnectWalletButton />
         </div>
         <Sheet>

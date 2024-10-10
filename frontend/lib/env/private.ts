@@ -7,6 +7,10 @@ const privateEnvSchema = z.object({
 
   OPENAI_API_KEY: z.string(),
 
+  FAUCET_PRIVATE_KEY: z.string(),
+  FAUCET_USDC_AMOUNT: z.string(),
+  FAUCET_ETH_AMOUNT: z.string(),
+
   SESSION_SECRET: z.string(),
   NODE_ENV: z.string(),
 });

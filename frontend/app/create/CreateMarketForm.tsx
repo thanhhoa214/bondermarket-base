@@ -106,11 +106,11 @@ export default function CreateMarketForm({ className, ...props }: HTMLAttributes
                   type="button"
                   variant={'secondary'}
                   size={'sm'}
-                  disabled={isLoading || isPending || isGenerating}
+                  disabled={!form.watch('title') || isLoading || isPending || isGenerating}
                   onClick={generateMarket}
                   className="text-xs h-auto py-1 px-2"
                 >
-                  {isGenerating ? <Loader2 className="animate-spin" /> : 'Improve using AI ✨'}
+                  {isGenerating ? <Loader2 size={16} className="animate-spin" /> : '✨ Improve using AI'}
                 </Button>
               </FormDescription>
               <FormMessage />
