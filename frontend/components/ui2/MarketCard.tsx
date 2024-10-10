@@ -2,7 +2,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card, CardTitle } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
-import { Market, Stages } from '@/lib/web3/market';
+import { MarketDetail, Stages } from '@/lib/web3/market';
 import Link from 'next/link';
 import { HTMLAttributes, useState } from 'react';
 import MarketCardStage from './MarketCardStage';
@@ -20,12 +20,12 @@ const formatTime = (date: Date): TimeLeftType => {
 };
 
 export default function MarketCard({
-  market,
+  marketDetail: { market, metadata },
   ...cardProps
 }: HTMLAttributes<HTMLDivElement> & {
-  market: Market;
+  marketDetail: MarketDetail;
 }) {
-  const { id, stage, metadata, expiryTime, disputed } = market;
+  const { betId, phase } = market;
   const title = metadata.title || 'Untitled Market';
   // const { days, hours } = formatTime(expiry_time);
 
@@ -59,7 +59,7 @@ export default function MarketCard({
   //   disputed: disputed,
   // };
 
-  const [isFront, setIsFront] = useState(stage !== Stages.Validate && stage !== Stages.Dispute);
+  const [isFront, setIsFront] = useState(phase !== Stages.Validate && phase !== Stages.Dispute);
 
   return (
     <Card {...cardProps} className="flex flex-col p-2 md:aspect-[5/4] relative">
@@ -67,11 +67,11 @@ export default function MarketCard({
       <div className="flex justify-between space-x-2 items-center">
         <Link
           className="flex flex-row items-center p-1 transition-transform duration-200 ease-in-out hover:scale-[1.02]"
-          href={'/market/' + id}
+          href={'/market/' + betId}
         >
           <Avatar className="mr-2">
             <AvatarImage src={metadata.image} />
-            <AvatarFallback>{id}</AvatarFallback>
+            <AvatarFallback>{betId}</AvatarFallback>
           </Avatar>
           <div className="flex-grow">
             <CardTitle className="text-[12px] line-clamp-2 font-normal">
@@ -90,7 +90,7 @@ export default function MarketCard({
             </CardTitle>
           </div>
         </Link>
-        <MarketCardStage stage={stage} size={32} />
+        <MarketCardStage stage={phase} size={32} />
       </div>
 
       {/* Div 2: MarketCardContent */}

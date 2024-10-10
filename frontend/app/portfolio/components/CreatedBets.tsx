@@ -6,17 +6,17 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardProps, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { dateFormatter } from '@/lib/utils';
-import { Markets, Stages } from '@/lib/web3/market';
+import { MarketDetail, Stages } from '@/lib/web3/market';
 import { useQuery } from '@tanstack/react-query';
 import { Edit, Plus } from 'lucide-react';
 import Link from 'next/link';
 import { useAccount } from 'wagmi';
 
-export default function CreatedBets({ serverMarkets, ...props }: CardProps & { serverMarkets: Markets }) {
+export default function CreatedBets({ serverMarkets, ...props }: CardProps & { serverMarkets: MarketDetail[] }) {
   const address = useAccount().address;
   const myMarketsQuery = useQuery({
     queryKey: ['myMarkets', address],
-    initialData: serverMarkets.filter((market) => market.creator === address),
+    initialData: serverMarkets.filter((market) => market.market.creatorId.toString() === address),
   });
 
   return (
@@ -45,25 +45,25 @@ export default function CreatedBets({ serverMarkets, ...props }: CardProps & { s
                   <Skeleton className="w-20 h-6" />
                 </li>
               ))
-            : myMarketsQuery.data?.map((market, index) => {
+            : myMarketsQuery.data?.map(({ market, metadata }, index) => {
                 return (
-                  <div key={market.id}>
+                  <div key={market.betId}>
                     {index > 0 && <hr />}
                     <li className="flex items-center py-2 px-2 -mx-2 gap-4 rounded-md hover:bg-foreground/5">
                       <Avatar>
-                        <AvatarImage src={market.metadata.image} />
-                        <AvatarFallback>{market.id.toString()}</AvatarFallback>
+                        <AvatarImage src={metadata.image} />
+                        <AvatarFallback>{market.betId.toString()}</AvatarFallback>
                       </Avatar>
                       <div className="max-w-60 line-clamp-2">
-                        <Link href={`/market/${market.id}`} className="font-semibold ftext-sm">
-                          {market.metadata.title}
+                        <Link href={`/market/${market.betId}`} className="font-semibold ftext-sm">
+                          {metadata.title}
                         </Link>
                         <p className="text-xs text-muted-foreground">
-                          Expire at {dateFormatter(Number(market.expiryTime))}
+                          Expire at {dateFormatter(Number(market.cutoffTime))}
                         </p>
                       </div>
                       <p className="ml-auto flex items-center gap-1 text-sm">
-                        <Badge variant={'outline'}>{Stages[market.stage]}</Badge>
+                        <Badge variant={'outline'}>{Stages[market.phase]}</Badge>
                       </p>
                       <div className="flex items-center gap-1">
                         <Button size={'icon'} variant={'ghost'}>

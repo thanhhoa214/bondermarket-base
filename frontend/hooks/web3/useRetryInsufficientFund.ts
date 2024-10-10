@@ -1,5 +1,5 @@
 import { ErrorCode, MetamaskErrorCode, TxError } from '@/lib/errors/error-dictionary';
-import { bonderBaseUsdcConfig, useReadBonderBaseUsdcDecimals } from '@/lib/web3/generated';
+import { bonderUsdcConfig, useReadBonderUsdcDecimals } from '@/lib/web3/generated';
 import { wagmiClientConfig } from '@/lib/web3/wagmiConfig';
 import { waitForTransactionReceipt, writeContract } from '@wagmi/core';
 import { useState } from 'react';
@@ -22,7 +22,7 @@ export function useRetryInsufficientFund({
   const [pending, setPending] = useState(false);
 
   const { isConnected } = useAccount();
-  const { data: decimals } = useReadBonderBaseUsdcDecimals();
+  const { data: decimals } = useReadBonderUsdcDecimals();
 
   const handleBuy = async () => {
     if (!isConnected) {
@@ -47,7 +47,7 @@ export function useRetryInsufficientFund({
       // Catch rejection in later step
       try {
         const approvalHash = await writeContract(wagmiClientConfig, {
-          ...bonderBaseUsdcConfig,
+          ...bonderUsdcConfig,
           functionName: 'approve',
           args: [approvalAddress, parsedAmount],
         });

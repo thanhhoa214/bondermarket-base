@@ -1,24 +1,20 @@
 import { zero } from '@/lib/web3/erc20';
-import { bonderV1BetFactoryConfig } from '@/lib/web3/generated';
+import { bonderV1YesNoFactoryConfig } from '@/lib/web3/generated';
 import { Market } from '@/lib/web3/market';
 import { wagmiClientConfig } from '@/lib/web3/wagmiConfig';
 import { writeContract } from '@wagmi/core';
-import { ContractFunctionName } from 'viem';
 import { useSide } from '../useSide';
-import { TradeType } from '../useTradeType';
 import { useRetryInsufficientFund } from './useRetryInsufficientFund';
 
-export function useRetryTrade({ marketId, tradeType }: { marketId?: Market['id']; tradeType: TradeType }) {
+export function useRetryTrade({ marketId }: { marketId?: Market['betId'] }) {
   const [side, setSide] = useSide('yes');
   const { amount, setAmount, handleBuy, pending } = useRetryInsufficientFund({
-    approvalAddress: bonderV1BetFactoryConfig.address,
+    approvalAddress: bonderV1YesNoFactoryConfig.address,
     writeTx: (amount) => {
-      let functionName: ContractFunctionName<typeof bonderV1BetFactoryConfig.abi>;
-      if (tradeType === 'bet') functionName = side === 'yes' ? 'buyYes' : 'buyNo';
-      else functionName = side === 'yes' ? 'bondYes' : 'bondNo';
+      const functionName = side === 'yes' ? 'buyYes' : 'buyNo';
 
       return writeContract(wagmiClientConfig, {
-        ...bonderV1BetFactoryConfig,
+        ...bonderV1YesNoFactoryConfig,
         functionName,
         args: [marketId ?? zero, amount],
       });

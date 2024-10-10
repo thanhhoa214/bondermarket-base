@@ -7,13 +7,14 @@ import { Input } from '@/components/ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Textarea } from '@/components/ui/textarea';
 import { cn, today } from '@/lib/utils';
-import { useWriteBonderV1BetFactoryCreateBet } from '@/lib/web3/generated';
+import { useWriteBonderV1YesNoFactoryCreateBet } from '@/lib/web3/generated';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { format } from 'date-fns';
 import { Calendar as CalendarIcon, Loader2 } from 'lucide-react';
 import { HTMLAttributes, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
+import { parseUnits } from 'viem';
 import { generateMarketDetail } from '../actions/ai/generateMarketDetail';
 import { createMarket } from '../actions/market.actions';
 import { ACCEPTED_IMAGE_TYPES, createMarketSchema, CreateMarketSchema } from './util';
@@ -25,9 +26,10 @@ export default function CreateMarketForm({ className, ...props }: HTMLAttributes
       title: '',
       context: '',
       bondingTime: new Date(),
+      creatorFee: 5,
     },
   });
-  const { writeContract, data, isPending, isSuccess, error } = useWriteBonderV1BetFactoryCreateBet();
+  const { writeContract, data, isPending, isSuccess, error } = useWriteBonderV1YesNoFactoryCreateBet();
   const [isLoading, setIsLoading] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
 
@@ -43,7 +45,7 @@ export default function CreateMarketForm({ className, ...props }: HTMLAttributes
 
   const onSubmit = async (values: CreateMarketSchema) => {
     if (isGenerating || isLoading || isPending) return;
-    const { title, context, bondingTime, image } = values;
+    const { title, context, bondingTime, creatorFee, image } = values;
     setIsLoading(true);
     const imageAsBase64 =
       image &&
@@ -57,7 +59,7 @@ export default function CreateMarketForm({ className, ...props }: HTMLAttributes
       context,
       image: imageAsBase64,
     });
-    writeContract({ args: [ipfsCid, BigInt(bondingTime.getTime())] });
+    writeContract({ args: [ipfsCid, BigInt(bondingTime.getTime()), parseUnits(creatorFee.toString(), 18)] });
     setIsLoading(false);
   };
 
@@ -81,7 +83,7 @@ export default function CreateMarketForm({ className, ...props }: HTMLAttributes
           name="title"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Title ✨</FormLabel>
+              <FormLabel>Title</FormLabel>
               <FormControl>
                 <Input placeholder="Will Trump be the next President?" {...field} />
               </FormControl>
@@ -94,11 +96,23 @@ export default function CreateMarketForm({ className, ...props }: HTMLAttributes
           name="context"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Resolve to Yes if ✨</FormLabel>
+              <FormLabel>Context</FormLabel>
               <FormControl>
                 <Textarea placeholder="Donald Trump wins the 2024 US Presidential Election." {...field} />
               </FormControl>
-              <FormDescription>Otherwise, this market resolve to &apos;No&apos;</FormDescription>
+              <FormDescription className="flex justify-between items-end">
+                We will automatically prefix every new lines with numbered.
+                <Button
+                  type="button"
+                  variant={'secondary'}
+                  size={'sm'}
+                  disabled={isLoading || isPending || isGenerating}
+                  onClick={generateMarket}
+                  className="text-xs h-auto py-1 px-2"
+                >
+                  {isGenerating ? <Loader2 className="animate-spin" /> : 'Improve using AI ✨'}
+                </Button>
+              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -174,16 +188,23 @@ export default function CreateMarketForm({ className, ...props }: HTMLAttributes
             </FormItem>
           )}
         />
+        <FormField
+          control={form.control}
+          name="creatorFee"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>
+                Creator fee <small>(%)</small>
+              </FormLabel>
+              <FormControl>
+                <Input type="number" {...field} min={0} max={100} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
         <footer className="flex justify-end gap-2">
-          <Button
-            type="button"
-            variant={'secondary'}
-            disabled={isLoading || isPending || isGenerating}
-            onClick={generateMarket}
-          >
-            {isGenerating ? <Loader2 className="animate-spin" /> : 'Improve my wording using AI ✨'}
-          </Button>
           <Button type="submit" disabled={isLoading || isPending}>
             {isLoading || isPending ? <Loader2 className="animate-spin" /> : 'Create market'}
           </Button>

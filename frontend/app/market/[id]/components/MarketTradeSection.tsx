@@ -20,7 +20,7 @@ import { useMarket } from '../MarketProvider';
 const tabs = ['buy', 'sell'];
 
 export default function MarketTradeSection(props: HtmlHTMLAttributes<HTMLDivElement>) {
-  const { market } = useMarket();
+  const marketDetail = useMarket();
   const { data: usdcAmount = 0, isLoading: isLoadingUsdc } = useMyUsdcAmount();
   const {
     side = 'yes',
@@ -29,18 +29,18 @@ export default function MarketTradeSection(props: HtmlHTMLAttributes<HTMLDivElem
     setAmount,
     handleBuy,
     pending,
-  } = useRetryTrade({ marketId: market?.id, tradeType: 'bet' });
+  } = useRetryTrade({ marketId: marketDetail.market?.betId });
   const sideAsText = startCase(side);
   const [tab, setTab] = useState(tabs[0]);
   const isBuy = tab === tabs[0];
 
-  const { data: yesBalance } = useMyErc20Amount(market?.yesToken);
-  const { data: noBalance } = useMyErc20Amount(market?.noToken);
+  const { data: yesBalance } = useMyErc20Amount(marketDetail.market?.yesToken);
+  const { data: noBalance } = useMyErc20Amount(marketDetail.market?.noToken);
   const holdAmount = { yes: Number(yesBalance) || 0, no: Number(noBalance) || 0 };
 
   const maxAmount = isBuy ? usdcAmount : holdAmount[side];
 
-  if (!market) return null;
+  if (!marketDetail) return null;
 
   async function handleTrade() {
     const result = await handleBuy();
@@ -85,10 +85,10 @@ export default function MarketTradeSection(props: HtmlHTMLAttributes<HTMLDivElem
             </div>
             <div className="flex gap-2 mt-2 *:flex-grow *:h-14">
               <Button variant={side === 'yes' ? 'yes' : 'outline'} onClick={() => setSide('yes')}>
-                Yes 47¢
+                Yes
               </Button>
               <Button variant={side === 'no' ? 'no' : 'outline'} onClick={() => setSide('no')}>
-                No 54¢
+                No
               </Button>
             </div>
             <div className="flex items-center gap-1 mt-4">

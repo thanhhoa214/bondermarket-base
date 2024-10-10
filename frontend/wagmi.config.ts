@@ -2,7 +2,6 @@ import { defineConfig } from '@wagmi/cli';
 import { react } from '@wagmi/cli/plugins';
 import { Abi } from 'viem';
 
-
 import * as BonderUSDCJson from '../contract/out/BonderUSDC.sol/BonderUSDC.json';
 import * as BonderV1CreatorNFTJson from '../contract/out/BonderV1CreatorNFT.sol/BonderV1CreatorNFT.json';
 import * as BonderV1YesNoFactoryJson from '../contract/out/BonderV1YesNoFactory.sol/BonderV1YesNoFactory.json';
@@ -29,7 +28,6 @@ export default defineConfig({
       name: 'BonderV1YesNoFactory',
       address: '0xACFe5D284FAF59cD0964E7D3F420805B8cD9a310',
     },
-
   ],
   plugins: [react()],
 });

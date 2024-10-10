@@ -4,7 +4,6 @@ import { getMarketById } from '@/lib/web3/market';
 import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import LpTradeSection from './components/LpTradeSection';
 import MarketHeader from './components/MarketHeader';
 import MarketTradeSection from './components/MarketTradeSection';
 import { MarketProvider } from './MarketProvider';
@@ -46,7 +45,6 @@ export default async function Page({ params }: { params: { id: string } }) {
           </section>
           <section className="w-full md:w-1/3">
             <MarketTradeSection className="mb-4" />
-            <LpTradeSection />
             <div className="w-full text-center">
               <Link href={'/pool'}>
                 <Button variant={'link'} className="gap-2">

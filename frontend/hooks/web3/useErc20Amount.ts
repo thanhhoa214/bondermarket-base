@@ -1,4 +1,4 @@
-import { bonderBaseUsdcAbi } from '@/lib/web3/generated';
+import { bonderUsdcAbi } from '@/lib/web3/generated';
 import { Address, formatUnits } from 'viem';
 import { createUseReadContract } from 'wagmi/codegen';
 
@@ -8,13 +8,13 @@ import { createUseReadContract } from 'wagmi/codegen';
  */
 export const useErc20Amount = (erc20Address?: string, trackingAddress?: Address) => {
   const { data: decimals } = createUseReadContract({
-    abi: bonderBaseUsdcAbi,
+    abi: bonderUsdcAbi,
     address: erc20Address as Address | undefined,
     functionName: 'decimals',
   })({ query: { enabled: !!erc20Address } });
 
   const { data: rawBalance, ...rest } = createUseReadContract({
-    abi: bonderBaseUsdcAbi,
+    abi: bonderUsdcAbi,
     address: erc20Address as Address | undefined,
     functionName: 'balanceOf',
   })({ args: [trackingAddress!], query: { enabled: !!erc20Address && !!trackingAddress } });

@@ -1,9 +1,10 @@
 import { IpfsMarketData } from '@/app/create/util';
-import { Address } from 'viem';
 import { baseSepolia } from 'viem/chains';
 import { createConfig, http } from 'wagmi';
 import { readContract } from 'wagmi/actions';
-import { bonderV1BetFactoryConfig } from './generated';
+import { bonderV1YesNoFactoryConfig } from './generated';
+
+type PromiseReturnType<T> = T extends Promise<infer R> ? R : never;
 
 const wagmiConfig = createConfig({
   chains: [baseSepolia],
@@ -13,26 +14,8 @@ const wagmiConfig = createConfig({
   },
 });
 
-export interface Market {
-  id: bigint;
-  betDescription: string;
-  creator: string;
-  expiryTime: bigint;
-  stage: number;
-  result: bigint;
-  disputed: boolean;
-  bonderFee: bigint;
-  claimAmt: bigint;
-  totalDeposited: bigint;
-  yesBonds: bigint;
-  noBonds: bigint;
-  yesToken: Address;
-  noToken: Address;
-  yesLp: Address;
-  noLp: Address;
-  metadata: IpfsMarketData;
-}
-
+export type MarketDetail = PromiseReturnType<ReturnType<typeof getMarketById>>;
+export type Market = MarketDetail['market'];
 export type Markets = Market[];
 
 export enum Stages {
@@ -45,8 +28,8 @@ export enum Stages {
 export async function getMarkets() {
   // get betId from bet_market contract
   const betId = await readContract(wagmiConfig, {
-    ...bonderV1BetFactoryConfig,
-    functionName: 'betId',
+    ...bonderV1YesNoFactoryConfig,
+    functionName: 'totalBets',
   });
 
   //   send multiple read requests to get bet details from 0 to betId
@@ -55,50 +38,16 @@ export async function getMarkets() {
 
 export async function getMarketById(id: number) {
   const market = await readContract(wagmiConfig, {
-    ...bonderV1BetFactoryConfig,
-    functionName: 'idToBet',
+    ...bonderV1YesNoFactoryConfig,
+    functionName: 'getBetStruct',
     args: [BigInt(id)],
   });
 
   const metadata: IpfsMarketData = await fetch(
-    `https://aquamarine-causal-albatross-713.mypinata.cloud/ipfs/${market[1]}`,
+    `https://aquamarine-causal-albatross-713.mypinata.cloud/ipfs/${market.betCid}`,
   )
     .then((res) => res.json())
     .catch(() => ({ title: 'Untitled Market', context: 'No context' }));
 
-  //   { name: 'id', internalType: 'uint256', type: 'uint256' },
-  //   { name: 'betDescription', internalType: 'string', type: 'string' },
-  //   { name: 'creator', internalType: 'address', type: 'address' },
-  //   { name: 'expiryTime', internalType: 'uint256', type: 'uint256' },
-  //   { name: 'stage', internalType: 'enum BonderV1BetFactory.Stages', type: 'uint8' },
-  //   { name: 'result', internalType: 'uint256', type: 'uint256' },
-  //   { name: 'disputed', internalType: 'bool', type: 'bool' },
-  //   { name: 'bonderFee', internalType: 'uint256', type: 'uint256' },
-  //   { name: 'claimAmt', internalType: 'uint256', type: 'uint256' },
-  //   { name: 'totalDeposited', internalType: 'uint256', type: 'uint256' },
-  //   { name: 'yesBonds', internalType: 'uint256', type: 'uint256' },
-  //   { name: 'noBonds', internalType: 'uint256', type: 'uint256' },
-  //   { name: 'yesToken', internalType: 'address', type: 'address' },
-  //   { name: 'noToken', internalType: 'address', type: 'address' },
-  //   { name: 'yesLp', internalType: 'address', type: 'address' },
-  //   { name: 'noLp', internalType: 'address', type: 'address' },
-  return {
-    id: market[0],
-    betDescription: market[1],
-    creator: market[2],
-    expiryTime: market[3],
-    stage: market[4],
-    result: market[5],
-    disputed: market[6],
-    bonderFee: market[7],
-    claimAmt: market[8],
-    totalDeposited: market[9],
-    yesBonds: market[10],
-    noBonds: market[11],
-    yesToken: market[12],
-    noToken: market[13],
-    yesLp: market[14],
-    noLp: market[15],
-    metadata,
-  };
+  return { market, metadata };
 }

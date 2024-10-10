@@ -8,7 +8,7 @@ import {
   CommandItem,
   CommandList,
 } from '@/components/ui/command';
-import { Markets } from '@/lib/web3/market';
+import { MarketDetail } from '@/lib/web3/market';
 import { useQuery } from '@tanstack/react-query';
 import { Search } from 'lucide-react';
 import { useRouter } from 'next/navigation';
@@ -20,7 +20,7 @@ export default function SuperSearch() {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useDebounceValue('', 500);
   const router = useRouter();
-  const marketsQuery = useQuery<Markets>({ queryKey: ['markets', query] });
+  const marketsQuery = useQuery<MarketDetail[]>({ queryKey: ['markets', query] });
 
   const onKeyDown = (e: KeyboardEvent) => {
     if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {
@@ -49,22 +49,19 @@ export default function SuperSearch() {
             <CommandItem>Search Emoji</CommandItem>
           </CommandGroup> */}
           <CommandGroup heading="Results">
-            {marketsQuery.data?.map((market) => (
+            {marketsQuery.data?.map((marketDetail) => (
               <CommandItem
-                key={market.id.toString()}
+                key={marketDetail.market.betId.toString()}
                 className="gap-2"
-                onSelect={() => router.push(`/market/${market.id}`)}
+                onSelect={() => router.push(`/market/${marketDetail.market.betId}`)}
               >
                 <Avatar>
                   {/* <AvatarImage src={market.image_url} /> */}
                   <AvatarFallback>CN</AvatarFallback>
                 </Avatar>
                 <div className="flex flex-col flex-grow">
-                  <strong>{market.betDescription}</strong>
-                  <p className="text-muted-foreground line-clamp-1">
-                    {market.betDescription}
-                    {/* {market.bet_detail[0].resolve_to_yes}. {market.bet_detail[0].additional_context} */}
-                  </p>
+                  <strong>{marketDetail.metadata.title}</strong>
+                  <p className="text-muted-foreground line-clamp-1">{marketDetail.metadata.context}</p>
                 </div>
               </CommandItem>
             ))}

@@ -11,7 +11,7 @@ import { useMarket } from '../MarketProvider';
 import MarketChart from './MarketChart';
 
 export default function MarketHeader() {
-  const { market } = useMarket();
+  const marketDetail = useMarket();
   const stages = [
     { stage: 'Bet', description: 'Everyone bets and trades YES/NO tokens.' },
     {
@@ -22,23 +22,24 @@ export default function MarketHeader() {
     { stage: 'Dispute', description: 'Bonders' },
     { stage: 'Claim', description: 'Winners & win-bonders can claim their rewards.' },
   ];
-  if (!market) return null;
+  if (!marketDetail) return null;
+  const { market, metadata } = marketDetail;
 
   return (
     <>
       <header className="flex gap-4 items-center mb-4">
         <Avatar>
-          <AvatarImage src={market.metadata.image} />
-          <AvatarFallback>{market.id}</AvatarFallback>
+          <AvatarImage src={metadata.image} />
+          <AvatarFallback>{market.betId}</AvatarFallback>
         </Avatar>
 
         <div className="w-full">
           <div className="flex items-center w-full text-muted-foreground text-xs md:text-sm">
             <span>${formatBigInt(market.totalDeposited)} Bet</span>
             <Clock size={16} className="ml-2 md:ml-4 mr-1" />
-            <span>{format(Number(market.expiryTime), 'MMM dd, yyyy')}</span>
+            <span>{format(Number(market.cutoffTime), 'MMM dd, yyyy')}</span>
             <Badge className="ml-2 md:ml-4">
-              {Stages[market.stage]} stage
+              {Stages[market.phase]} stage
               <Tooltip>
                 <TooltipTrigger asChild>
                   <CircleHelp size={16} className="ml-1" />
@@ -78,7 +79,7 @@ export default function MarketHeader() {
               </li>
             </ul>
           </div>
-          <h2 className="text-lg font-semibold mt-1 md:mt-0">{market.metadata.title}</h2>
+          <h2 className="text-lg font-semibold mt-1 md:mt-0">{metadata.title}</h2>
         </div>
       </header>
 

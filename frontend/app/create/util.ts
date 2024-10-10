@@ -8,6 +8,10 @@ export const createMarketSchema = z.object({
   title: z.string().min(2, { message: 'Title must be at least 2 characters.' }),
   context: z.string().min(2, { message: 'Context must be at least 2 characters.' }),
   bondingTime: z.date().min(today, { message: 'Bonding time must be in the future.' }),
+  creatorFee: z
+    .number()
+    .min(0, { message: 'Creator fee in % must be positive number.' })
+    .max(100, { message: 'Creator fee in % must be less than 100.' }),
   image: z
     .any()
     .refine((files) => files?.length === 1, 'Image is required.')

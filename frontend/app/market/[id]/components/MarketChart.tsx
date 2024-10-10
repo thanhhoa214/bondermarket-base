@@ -10,9 +10,9 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export default function MarketChart() {
-  const market = useMarket();
-  const yesEvents = usePastEvents(market.market?.yesToken);
-  const noEvents = usePastEvents(market.market?.noToken);
+  const marketDetail = useMarket();
+  const yesEvents = usePastEvents(marketDetail.market?.yesToken);
+  const noEvents = usePastEvents(marketDetail.market?.noToken);
 
   const sortedEvents = yesEvents
     .map((e) => ({ data: erc20EventToTransferData(e), type: 'yes' }))
