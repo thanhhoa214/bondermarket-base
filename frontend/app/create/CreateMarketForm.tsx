@@ -197,7 +197,13 @@ export default function CreateMarketForm({ className, ...props }: HTMLAttributes
                 Creator fee <small>(%)</small>
               </FormLabel>
               <FormControl>
-                <Input type="number" {...field} min={0} max={100} />
+                <Input
+                  type="number"
+                  {...field}
+                  min={0}
+                  max={100}
+                  onChange={(e) => field.onChange(Number(e.target.value))}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>

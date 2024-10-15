@@ -26,7 +26,7 @@ async function sendUSDC(toAddress: Address, amount: number) {
   const { request } = await publicClient.simulateContract({
     ...bonderUsdcConfig,
     functionName: 'transfer',
-    args: [toAddress, parseUnits(amount.toString(), 18)],
+    args: [toAddress, parseUnits(amount.toString(), 6)],
     account,
   });
 
