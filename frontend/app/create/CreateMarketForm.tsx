@@ -7,10 +7,11 @@ import { Input } from '@/components/ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Textarea } from '@/components/ui/textarea';
 import { cn, today } from '@/lib/utils';
-import { useWriteBonderV1YesNoFactoryCreateBet } from '@/lib/web3/generated';
+import { useReadBonderV1CreatorNftCreatorFeeCap, useWriteBonderV1YesNoFactoryCreateBet } from '@/lib/web3/generated';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { format } from 'date-fns';
 import { Calendar as CalendarIcon, Loader2 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { HTMLAttributes, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
@@ -29,15 +30,18 @@ export default function CreateMarketForm({ className, ...props }: HTMLAttributes
       creatorFee: 5,
     },
   });
+
+  const { data: feeCap = 0 } = useReadBonderV1CreatorNftCreatorFeeCap();
   const { writeContract, data, isPending, isSuccess, error } = useWriteBonderV1YesNoFactoryCreateBet();
   const [isLoading, setIsLoading] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     if (!isSuccess) return;
-    form.reset();
     toast.success(`Market created with tx ${data}`);
-  }, [isSuccess, form, data]);
+    router.push('/');
+  }, [router, isSuccess, form, data]);
 
   useEffect(() => {
     if (error) toast.error(`Error: ${error.message}`);
@@ -201,7 +205,7 @@ export default function CreateMarketForm({ className, ...props }: HTMLAttributes
                   type="number"
                   {...field}
                   min={0}
-                  max={100}
+                  max={Number(feeCap) * 1000}
                   onChange={(e) => field.onChange(Number(e.target.value))}
                 />
               </FormControl>

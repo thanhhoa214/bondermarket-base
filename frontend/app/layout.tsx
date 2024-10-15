@@ -51,7 +51,7 @@ export default function RootLayout({ children }: PropsWithChildren) {
             toastOptions={{
               classNames: {
                 error: 'bg-red-400 border-red-500',
-                success: 'bg-green-300 border-green-500',
+                success: 'bg-green-600 border-green-700',
                 warning: 'bg-yellow-300 border-yellow-500',
                 info: 'bg-blue-300 border-blue-500',
               },
