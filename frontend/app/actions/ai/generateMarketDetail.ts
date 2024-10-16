@@ -49,7 +49,6 @@ export async function generateMarketDetail(info: GenerateMarketRequest) {
     new SystemMessage({ content: prompt }),
     new HumanMessage({ content: `'Here is original sentences: ${original}'` }),
   ]);
-  console.log(additional_kwargs, 'response');
 
   if (!additional_kwargs.function_call) return null;
   const extractionReturns = JSON.parse(additional_kwargs.function_call.arguments) as { market: GenerateMarketRequest };
