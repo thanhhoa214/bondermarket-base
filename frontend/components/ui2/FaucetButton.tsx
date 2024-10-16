@@ -1,5 +1,7 @@
 'use client';
 import { faucetUser, getUser } from '@/app/actions/user.actions';
+import { useMyUsdcAmount } from '@/hooks/web3/useMyUsdcAmount';
+import { moneyFormatter } from '@/lib/utils';
 import usdcSvg from '@/public/tokens/usdc.svg';
 import { useQuery } from '@tanstack/react-query';
 import { delay } from 'lodash-es';
@@ -26,10 +28,20 @@ export default function FaucetButton() {
     queryFn: () => account.address && getUser(account.address),
     enabled: !!account.address,
   });
+  const { data: usdc } = useMyUsdcAmount();
 
   if (!account.address) return null;
   if (isLoading) return null;
-  if (userResponse?.success && userResponse?.data?.faucetted) return null;
+  if (userResponse?.success && userResponse?.data?.faucetted)
+    return (
+      <span className="inline-flex flex-col text-xs">
+        Balance
+        <span className="text-muted-foreground">
+          <strong>{moneyFormatter(usdc || 0)}</strong> {''}
+          <span className="text-[10px]">BONDERUSDC</span>
+        </span>
+      </span>
+    );
 
   async function faucet() {
     if (!account.address) return;
