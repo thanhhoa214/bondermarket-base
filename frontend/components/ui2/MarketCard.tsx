@@ -29,22 +29,20 @@ export default function MarketCard({
       className="flex flex-col overflow-hidden border-2 mt-[0.5rem] min-w-[340px] bg-gradient-to-r from-zinc-800/10 to-zinc-600/10"
     >
       {/* Div 1: Image, Title, and Bets */}
-      <div className="relative shadow-sm overflow-hidden">
-        <div className="py-2 px-4 h-[80px] flex justify-between overflow-hidden gap-2 items-center">
-          <div className="shrink-0 w-10 aspect-square relative rounded-sm overflow-hidden">
-            <Image className="object-cover" fill src={metadata.image} alt={metadata.title} />
-          </div>
-
-          {/* If Bet - Will. Else - Did. Claim - Trump did win? */}
-          <CardTitle className="border-b text-sm font-semibold w-60 line-clamp-2">{title}</CardTitle>
-
-          {/* Bet amount */}
-          <div className="shrink-0 text-center">
-            <p className="text-xs">${formatNumber(totalDeposited, 0)}</p>
-            <p className="text-[10px]">Bet</p>
-          </div>
+      <header className="py-2 pl-3 pr-4 h-16 flex justify-between overflow-hidden gap-2 items-center border-b">
+        <div className="shrink-0 w-10 aspect-square relative rounded-sm overflow-hidden">
+          <Image className="object-cover" fill src={metadata.image} alt={metadata.title} />
         </div>
-      </div>
+
+        {/* If Bet - Will. Else - Did. Claim - Trump did win? */}
+        <CardTitle className="text-sm font-semibold w-60 line-clamp-2">{title}</CardTitle>
+
+        {/* Bet amount */}
+        <div className="shrink-0 text-center">
+          <p className="text-xs">${formatNumber(totalDeposited, 0)}</p>
+          <p className="text-[10px]">Bet</p>
+        </div>
+      </header>
 
       {/* Div 2: MarketCardContent */}
       <div className="overflow-auto min-h-[160px]">
