@@ -13,20 +13,25 @@ import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 import { CardContent } from '../ui/card';
 import { Slider } from '../ui/slider';
-
+import TxLink from '@/components/ui2/TxLink';
+import { useRetryTrade } from '@/hooks/web3/useRetryTrade';
+import {toast} from 'sonner';
 const formSchema = z.object({ amount: z.number() });
 
 // TODO: Need to link to write buttons
 
 export default function MarketCardPurchase({
   onBack,
+  stage,
   side,
   tradeType,
+  betId,
   ...props
 }: {
   stage: Stages;
   side: Side;
   tradeType?: TradeType;
+  betId: bigint;
   onBack: VoidFunction;
 }) {
   const form = useForm<z.infer<typeof formSchema>>({
@@ -34,9 +39,46 @@ export default function MarketCardPurchase({
     defaultValues: { amount: 1 },
   });
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
-    console.log(values);
+  const {
+    // side,
+    // setSide,
+    amount,
+    setAmount,
+    handleBuy,
+    pending,
+  } = useRetryTrade({ marketId: betId, boughtSide: side });
+
+  
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    try {
+      const result = await handleBuy(); // Execute the trade
+      if (typeof result === 'object') {
+        toast.success(
+          <p>
+            You've successfully bought <strong>{amount}</strong> shares of <strong>{side}</strong>. Your
+            transaction detail is
+            <TxLink hash={result.betHash} className="ml-2" />
+          </p>,
+        );
+      }
+    } catch (error) {
+      toast.error('Trade failed. Please try again.');
+    }
   };
+
+
+  // async function handleTrade() {
+  //   const result = await handleBuy();
+  //   if (typeof result === 'object') {
+  //     toast.success(
+  //       <p>
+  //         You&apos;ve successfully bought <strong>{amount}</strong> shares of <strong>{sideAsText}</strong>. Your
+  //         transaction detail is
+  //         <TxLink hash={result.betHash} className="ml-2" />
+  //       </p>,
+  //     );
+  //   }
+  // }
 
   return (
     <Form {...form}>
@@ -64,7 +106,12 @@ export default function MarketCardPurchase({
           />
         </CardContent>
         <div className="flex items-center px-4 flex-col">
-          <Button variant={side} type="submit" className={'flex-col h-auto w-full'}>
+          <Button 
+          // onClick={form.handleSubmit(onSubmit)}
+          variant={side} 
+          type="submit" 
+          className={'flex-col h-auto w-full'}
+          >
             <strong className="font-semibold">
               {startCase(tradeType)} {startCase(side)}
             </strong>

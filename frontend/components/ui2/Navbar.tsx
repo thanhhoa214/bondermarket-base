@@ -20,7 +20,7 @@ export default function Navbar() {
   const links = [
     { href: '/', label: 'Markets' },
     { href: '/create', label: 'Create' },
-    { href: '/portfolio', label: 'Portfolio' },
+    // { href: '/portfolio', label: 'Portfolio' },
   ];
 
   const normalizePath = (path: string) => path.replace(/\/$/, '');

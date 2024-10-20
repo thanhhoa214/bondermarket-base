@@ -6,18 +6,14 @@ import { MarketDetail, Stages } from '@/lib/web3/market';
 import Link from 'next/link';
 import { HTMLAttributes, useState } from 'react';
 import MarketCardStage from './MarketCardStage';
-
-type TimeLeftType = {
-  days: number;
-  hours: number;
-};
-
-const formatTime = (date: Date): TimeLeftType => {
-  const timeInSeconds = date.getTime() / 1000 - Date.now() / 1000;
-  const days = Math.floor(timeInSeconds / 86400);
-  const hours = Math.floor((timeInSeconds - days * 86400) / 3600);
-  return { days, hours };
-};
+import { useTotalMinted } from '@/hooks/web3/useTotalMinted';
+import {formatNumber} from '@/lib/utils';
+import Image from 'next/image';
+import { Button } from '@/components/ui/button';
+import { useSide } from '@/hooks/useSide';
+import { useTradeType } from '@/hooks/useTradeType';
+import MarketCardPurchase from './MarketCardPurchase';
+import MarketCardContent from './MarketCardContent';
 
 export default function MarketCard({
   marketDetail: { market, metadata },
@@ -25,111 +21,99 @@ export default function MarketCard({
 }: HTMLAttributes<HTMLDivElement> & {
   marketDetail: MarketDetail;
 }) {
-  const { betId, phase } = market;
+  const { betId, phase, yesToken, noToken } = market;
   const title = metadata.title || 'Untitled Market';
-  // const { days, hours } = formatTime(expiry_time);
 
-  // // process the retrieved variables
-  // const totalBetSupply = yes_token_supply + no_token_supply;
-  // const yesPercentage = (Number(yes_token_supply) / Number(totalBetSupply)) * 100;
-  // const totalBondSupply = yes_bonds + no_bonds;
-  // const bondPercentage = (Number(yes_bonds) / Number(no_bonds)) * 100;
+  const { totalMinted: yesTotalMinted } = useTotalMinted(yesToken);
+  const { totalMinted: noTotalMinted } = useTotalMinted(noToken);
+  const totalDeposited = ((yesTotalMinted || 0) + (noTotalMinted || 0));
+  
+  console.log(yesTotalMinted, noTotalMinted, totalDeposited);
+  const yesPercentage = (Number(yesTotalMinted) / Number(totalDeposited)) * 100 || 0;
+  const noPercentage = (Number(noTotalMinted) / Number(totalDeposited)) * 100 || 0;
+  
+  const [side, setSide] = useSide();
+  const [tradeType, setTradeType] = useTradeType();
 
-  // const poolFee = %;
-  // const feeToPool = poolFee * total_deposited;
-  // TODO: need to get this variable - not on our db - call from contract?
-  const feeToPool = 10000;
 
-  // const betData = {
-  //   type: 'bet',
-  //   yes: 8000, // TODO: yes_token_supply
-  //   no: 2000, // TODO: no_token_supply
-  //   likelihood: 80, // TODO: yesPercentage
-  //   result: 1, // TODO: result
-  //   total: totalBetSupply,
-  // };
 
-  // const bondData = {
-  //   type: 'bond',
-  //   yes: 60,
-  //   no: 30,
-  //   likelihood: bondPercentage,
-  //   total: totalBondSupply,
-  //   fee: feeToPool,
-  //   disputed: disputed,
-  // };
-
-  const [isFront, setIsFront] = useState(phase !== Stages.Validate && phase !== Stages.Dispute);
 
   return (
-    <Card {...cardProps} className="flex flex-col p-2 md:aspect-[5/4] relative">
-      {/* Div 1: Image, Title, and Stage */}
-      <div className="flex justify-between space-x-2 items-center">
-        <Link
-          className="flex flex-row items-center p-1 transition-transform duration-200 ease-in-out hover:scale-[1.02]"
-          href={'/market/' + betId}
-        >
-          <Avatar className="mr-2">
-            <AvatarImage src={metadata.image} />
-            <AvatarFallback>{betId}</AvatarFallback>
-          </Avatar>
-          <div className="flex-grow">
-            <CardTitle className="text-[12px] line-clamp-2 font-normal">
-              {/* TODO: To ensure title length falls under our stated range */}
-              {isFront ? (
-                <>
-                  <span className="text-primary">Will {title}</span>
-                  {title.slice(5)}
-                </>
-              ) : (
-                <>
-                  <span className="text-purple-400">Did </span>
-                  {title.startsWith('Will') ? title.slice(5) : title}
-                </>
-              )}
+    
+    <Card 
+    {...cardProps}
+    className="flex flex-col overflow-hidden border-2 mt-[0.5rem] min-w-[340px] bg-gradient-to-r from-zinc-800/10 to-zinc-600/10">
+        {/* Div 1: Image, Title, and Bets */}
+        <div className="relative shadow-sm overflow-hidden">
+          <div className="py-2 px-4 h-[80px] flex justify-between overflow-hidden gap-2 items-center">
+            <div className="w-[40px] h-[40px] relative rounded-sm overflow-hidden">
+              <Image className="object-cover" src={metadata.image} alt="" width={40} height={40} />
+            </div>
+            
+            {/* If Bet - Will. Else - Did. Claim - Trump did win? */}
+            <CardTitle className="border-b text-sm font-semibold">
+              <p className="transition-all w-[240px] duration-300 ease-in-out text-left p-2">
+                {title}
+              </p>
             </CardTitle>
-          </div>
-        </Link>
-        <MarketCardStage stage={phase} size={32} />
-      </div>
 
-      {/* Div 2: MarketCardContent */}
-
-      {/* <div className="py-2">
-        <MarketCardContent2 betData={betData} bondData={bondData} stage={stage} isFront={isFront} />
-      </div> */}
-
-      {/* Div 3: Grey text beneath */}
-      {/* <div className="absolute text-sm text-gray-500 bottom-0 left-0 right-0 p-2 bg-background"> */}
-
-      <div className="text-[12px]/[16px] flex justify-between items-center text-gray-500 absolute bottom-0 left-0 right-0 p-2">
-        {/* <div className="flex flex-row gap-2 items-end">
-          <div className="flex flex-col justify-center items-center">
-            <div className="text-xs/[12px]">{moneyFormatter(betData.total)}</div>
-            <div className="text-[10px]">Bet</div>
-          </div>
-
-          <div>
+            {/* Bet amount */}
             <div className="flex flex-col justify-center items-center">
-              <div className="text-xs/[12px]">
-                {moneyFormatter(bondData.fee)} <span className="text-[12px]">to</span>
-              </div>
-              <div className={` text-[10px] ${disputed ? 'text-amber-600' : 'text-gray-600'}`}>
-                {disputed ? 'Bonders' : 'Bonder Pool'}
-              </div>
+              <div className="text-xs">${formatNumber(totalDeposited * 10**12, 0)}</div>
+              <div className="text-[10px]">Bet</div>
             </div>
           </div>
-        </div> */}
+        </div>
 
-        {/* <CustomSwitch2 /> */}
-        <Switch
-          defaultChecked={isFront}
-          checked={!isFront}
-          onCheckedChange={() => setIsFront(!isFront)}
-          className="data-[state=checked]:bg-primary data-[state=unchecked]:bg-secondary hover:scale-[1.1]"
-        />
-      </div>
-    </Card>
+        {/* Div 2: MarketCardContent */}
+        <div className="overflow-auto min-h-[160px]">
+          <MarketCardContent
+          betId={betId}
+          yesPercentage={yesPercentage}
+          noPercentage={noPercentage}
+          yesTotalMinted  ={yesTotalMinted || 0}
+          noTotalMinted={noTotalMinted || 0}
+          phase={phase}
+          />
+        </div>
+        
+        {/* Div 3: Grey text beneath */}
+        <div className="bottom-0 text-sm border-t flex items-center justify-between py-2 px-4">
+          <div className="flex items-center text-xs flex-row gap-2">
+            <span className={`text-highlight`}>Bet</span>{">"}
+            <span className={`'text-muted-foreground'}`}>Validate</span>{">"}
+            <span className={`'text-muted-foreground'}`}>Dispute</span>{">"}
+            <span className={`'text-muted-foreground'}`}>Claim</span>
+            
+          </div>
+          {/* <div className="text-xs">
+            {data.cutoffTime ? (
+              new Date(data.cutoffTime).getTime() - Date.now() > 3600000 ? (
+                format(data.cutoffTime, 'PPp')
+              ) : (
+                <CountdownTimer targetDate={data.cutoffTime} />
+              )
+            ) : (
+              'Not set'
+            )}
+          </div> */}
+          <div className="text-xs">
+            {/* TODO: To add and fix the cutoff time */}
+          {/* {expiry_time ? format(expiry_time, 'PP') : 'Not set'} */}
+            {/* {data.cutoffTime ? format(data.cutoffTime, 'PPp') : 'Not set'} */}
+            {/* {data.cutoffTime ? (
+              new Date(data.cutoffTime).getTime() - Date.now() > 3600000 ? (
+                format(data.cutoffTime, 'PPp')
+              ) : (
+                <CountdownTimer targetDate={data.cutoffTime} />
+              )
+            ) : (
+              'Not set'
+            )} */}
+
+          </div>        
+        </div>
+      </Card>
   );
 
   // return (

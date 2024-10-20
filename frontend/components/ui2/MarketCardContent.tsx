@@ -13,6 +13,8 @@ import { useTradeType } from '@/hooks/useTradeType';
 import { Stages } from '@/lib/web3/market';
 import { motion } from 'framer-motion';
 import { CircleAlert, CircleCheck, CircleHelp, CircleX } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+
 // export type Choice = 'yes' | 'no';
 // export type CardType = 'bet' | 'bond';
 
@@ -48,10 +50,12 @@ type MarketData = {
 };
 
 interface MarketCardContentProps {
-  betData: MarketData;
-  bondData: MarketData;
-  stage: Stages;
-  isFront: boolean;
+  yesPercentage: number;
+  noPercentage: number;
+  yesTotalMinted: number;
+  noTotalMinted: number;
+  phase: Stages;
+  betId: bigint;
   // initialChoice?: Side;
 }
 
@@ -144,11 +148,12 @@ const ClaimButtons = () => {
 };
 
 export default function MarketCardContent({
-  betData,
-  bondData,
-  stage,
-  isFront,
-  // initialChoice="yesBet"
+  yesPercentage,
+  noPercentage,
+  yesTotalMinted,
+  noTotalMinted,
+  phase,
+  betId,
 }: MarketCardContentProps) {
   const [side, setSide] = useSide();
   const [tradeType, setTradeType] = useTradeType();
@@ -156,7 +161,8 @@ export default function MarketCardContent({
   if (side && tradeType) {
     return (
       <MarketCardPurchase
-        stage={stage}
+        betId={betId}
+        stage={phase}
         side={side}
         tradeType={tradeType}
         onBack={() => {
@@ -167,244 +173,73 @@ export default function MarketCardContent({
     );
   }
 
-  const maxAngle = 45; // in degrees
-  // const angle = (bondData.yes - bondData.no) * maxAngle / 100;
-  const netBond = bondData.no - bondData.yes;
-  const angle = (netBond * maxAngle) / 100;
-
   return (
-    <div className="relative">
-      <CardContent className="py-0 px-0">
-        {(() => {
-          if (isFront) {
-            return (
+    <div className="relative flex flex-col justify-center items-center py-2">
+            
+          {/* <MarketCardContent betData={betData} bondData={bondData} phase={phase} /> */}
+            {/* TODO: Only styled Bet for now. To style below later */}
               <>
-                {stage === Stages.Claim ? (
-                  <ClaimUI betData={betData} />
-                ) : (
-                  <div
-                    className={`${stage === Stages.Validate || stage === Stages.Dispute ? 'opacity-50' : ''} relative group`}
-                  >
-                    <div className="absolute bottom-20 inset-0 flex justify-between items-center pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20">
-                      <Badge variant="secondary" className="left-2 bg-green-500/75">
-                        {formatNumber(betData.yes)}
-                      </Badge>
-                      <Badge variant="secondary" className="right-2 bg-red-500/75">
-                        {formatNumber(betData.no)}
-                      </Badge>
-                    </div>
-
-                    <ChartContainer
-                      config={chartConfig}
-                      className="mx-auto aspect-square w-40 group-hover:opacity-80 transition-opacity duration-300"
-                    >
-                      {/* <div className=""> */}
-
-                      {/* <div className="relative"> */}
-                      <RadialBarChart data={[betData]} innerRadius={70} outerRadius={85} startAngle={0} endAngle={180}>
-                        <PolarRadiusAxis tick={false} tickLine={false} axisLine={false}>
-                          {/* <Label
-                        content={({ viewBox }) => {
-                          if (viewBox && "cx" in viewBox && "cy" in viewBox) {
-                            return (
-                              <text
-                                x={viewBox.cx}
-                                y={viewBox.cy}
-                                textAnchor="middle"
-                              >
-                                <tspan
-                                  x={viewBox.cx}
-                                  y={(viewBox.cy || 0) - 16}
-                                  className="fill-foreground text-2xl"
-                                >
-                                  {betData.likelihood.toLocaleString()}%
-                                </tspan>
-                                <tspan
-                                  x={viewBox.cx}
-                                  y={(viewBox.cy || 0) + 4}
-                                  className="fill-muted-foreground"
-                                >
-                                  YES
-                                </tspan>
-                              </text>
-                            );
-                          }
-                        }}
-                      /> */}
-                        </PolarRadiusAxis>
-                        <RadialBar dataKey="no" stackId="a" cornerRadius={4} className="fill-red-700" />
-                        <RadialBar dataKey="yes" stackId="a" cornerRadius={4} className="fill-green-600" />
-                      </RadialBarChart>
-                    </ChartContainer>
-                    <div className="absolute bottom-10 inset-0 flex flex-col items-center justify-center text-center mt-2">
-                      <span className="text-2xl">{betData.likelihood.toLocaleString()}%</span>
-                      <span className="text-xs text-muted-foreground">YES</span>
-                    </div>
-                  </div>
-                )}
-
-                <div className="flex-col gap-1 z-20 text-sm absolute bottom-5 left-0 right-0 text-center">
-                  {/* Yes No buttons. Claim | Unbond buttons */}
-
-                  {stage === Stages.Claim ? (
-                    <ClaimButtons />
-                  ) : (
-                    <div className="w-full mx-auto grid grid-cols-2 gap-x-4 my-2">
-                      <button
-                        onClick={() => {
-                          setSide('yes');
-                          setTradeType('bet');
-                        }}
-                        disabled={stage === Stages.Validate || stage === Stages.Dispute}
-                        className="yes-button bg-green-500 text-white px-6 py-0.5 rounded-md hover:bg-green-600 transition-colors duration-200 ease-in-out hover:scale-[1.02] disabled:hover:scale-[1] flex flex-col justify-center items-center h-auto"
-                      >
-                        <small className="font-normal">Bet</small> <span className="uppercase -mt-1">Yes</span>
-                      </button>
-                      <button
-                        onClick={() => {
-                          setSide('no');
-                          setTradeType('bet');
-                        }}
-                        disabled={stage === Stages.Validate || stage === Stages.Dispute}
-                        className="no-button bg-red-500 text-white px-6 py-0.5 rounded-md hover:bg-red-600 transition-colors duration-200 ease-in-out hover:scale-[1.02] disabled:hover:scale-[1] flex flex-col justify-center items-center h-auto"
-                      >
-                        <small className="font-normal">Bet</small> <span className="uppercase -mt-1">No</span>
-                      </button>
-                    </div>
-                  )}
+                <div className="flex flex-col justify-center items-center mb-2">
+                  <span className={`text-2xl font-bold text-end ${yesPercentage >= 50 ? 'text-positive' : 'text-negative'}`}>{formatNumber(yesPercentage)}</span>
+                  <span className="text-xs text-muted-foreground">% chance</span>
                 </div>
-              </>
-            );
-          } else if (!isFront) {
-            return (
-              <>
-                {stage === Stages.Claim ? (
-                  <ClaimUI betData={betData} />
-                ) : (
-                  <div className="relative group">
-                    <div className="absolute bottom-20 inset-0 flex justify-between items-center pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20">
-                      <Badge variant="secondary" className="bg-green-500/75 mb-1">
-                        {formatNumber(bondData.yes)}
-                      </Badge>
 
-                      <Badge variant="secondary" className="right-2 bg-red-500/75">
-                        {formatNumber(bondData.no)}
-                      </Badge>
-                    </div>
-                    <ChartContainer
-                      config={chartConfig}
-                      className="mx-auto aspect-square w-40 group-hover:opacity-80 transition-opacity duration-300"
+                <div className="w-[320px] flex flex-col gap-2">
+                  
+                  <div>
+                  <div className="w-full flex justify-between items-center pointer-events-none z-20 opacity-20 transition-opacity duration-300">
+                    <span className="text-xs text-positive" >
+                      {formatNumber(yesPercentage)}
+                    </span>
+                    <span className="text-xs text-negative" >
+                      {formatNumber(noPercentage)}
+                    </span>
+                  </div>
+                  <div className="relative w-full h-2 bg-border rounded-full overflow-hidden group">
+                    <div className={`absolute left-0 top-0 h-full ${yesPercentage >= 50 ? 'bg-positive' : 'bg-positive/10'}`} style={{ width: `${yesPercentage}%` }}></div>
+                    <div className={`absolute right-0 top-0 h-full ${yesPercentage >= 50 ? 'bg-negative/10' : 'bg-negative'}`} style={{ width: `${noPercentage}%` }}></div>
+                  
+                  
+                  </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    <Button
+                      // disabled={true}
+                      variant="yes"
+                      size="bet"
+                      onClick={() => {
+                        setSide('yes');
+                        setTradeType('bet');
+                      }}
                     >
-                      <div className="top-6 absolute left-0 right-0 flex flex-col items-center justify-center">
-                        <div className="absolute left-0 right-0 flex justify-center items-center">
-                          <motion.div className="transform w-20 h-[1px] border-t border-dashed border-green-500" />
-                          <motion.div className="transform w-20 h-[1px] border-t border-dashed border-red-500" />
-                        </div>
-
-                        <motion.div
-                          className={`transform z-20 rounded-xl top-8 w-40 h-[5px] ${netBond > 0 ? 'bg-red-600' : 'bg-green-600'}`}
-                          style={{
-                            transform: `rotate(${angle}deg)`,
-                          }}
-                          animate={{
-                            rotate: angle,
-                          }}
-                          transition={{
-                            type: 'spring',
-                            stiffness: 100,
-                            damping: 10,
-                          }}
-                        >
-                          {/* Left side */}
-                          {/* <div className="absolute left-0 transform -translate-y-full -translate-x-1/2 w-16 h-16 bg-blue-500 rounded-full"></div> */}
-
-                          {/* Right side */}
-                          {/* <div className="absolute right-0 transform -translate-y-full translate-x-1/2 w-16 h-16 bg-green-500 rounded-full"></div> */}
-                        </motion.div>
-
-                        {/* <div className="absolute">
-  
-                      <motion.div
-                        className="top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-18 h-[1px] border-t border-dashed bg-green-500/50"
-                        /> */}
-                        <div className="absolute left-0 right-0 flex justify-center items-center">
-                          <motion.div
-                            className="transform w-20 h-[1px] border-t border-dashed border-green-500"
-                            style={{
-                              boxShadow: angle < 0 ? '0 5px 12px 1px rgb(22, 163, 74)' : 'none',
-                            }}
-                          />
-                          <motion.div
-                            className="transform w-20 h-[1px] border-t border-dashed border-red-500"
-                            style={{
-                              boxShadow: angle > 0 ? '0 5px 12px 1px rgb(220, 38, 38)' : 'none',
-                            }}
-                          />
-                        </div>
-                        {/* </div> */}
+                      <div className="flex flex-col">
+                        <span className="block relative top-1">Yes</span>
+                        <span className="block text-[9px]">${Number(yesTotalMinted) * 10**12}</span>
                       </div>
-                    </ChartContainer>
-                    <div className="absolute bottom-10 inset-0 flex flex-col items-center justify-center text-center mt-2">
-                      <span className={`${angle < 0 ? 'text-green-500' : 'text-red-500'} text-2xl`}>
-                        {angle < 0 ? 'YES' : 'NO'}
-                      </span>
-                      <span
-                        className={`${bondData.disputed ? 'bg-amber-600 text-white' : 'bg-grey-500/75 text-muted-foreground'} text-[9px] border rounded-full px-2`}
-                      >
-                        Disputed
-                        {/* YES */}
-                      </span>
-                    </div>
+                    </Button>
+                    <Button
+                      // disabled={true}
+                      variant="no"
+                      size="bet"
+                      onClick={() => {
+                        setSide('no');
+                        setTradeType('bet');
+                      }}
+                    >
+                      <div className="flex flex-col">
+                        <span className="block relative top-1">No</span>
+                        <span className="block text-[9px]">${Number(noTotalMinted) * 10**12}</span>
+                      </div>
+                    </Button>
                   </div>
-                )}
 
-                {/* Buttons */}
-                <div className="flex-col gap-1 z-20 text-sm absolute bottom-5 left-0 right-0 text-center">
-                  {stage === Stages.Claim ? (
-                    <ClaimButtons />
-                  ) : (
-                    <div className="w-full mx-auto grid grid-cols-2 gap-x-4 my-2">
-                      <button
-                        onClick={() => {
-                          setSide('yes');
-                          setTradeType('bond');
-                        }}
-                        // TODO: set disabled once ready
-                        disabled={stage === Stages.Bet}
-                        className="yes-button relative bg-purple-700 text-white px-6 py-0.5 rounded-md hover:bg-purple-500 transition-colors duration-200 ease-in-out hover:scale-[1.02] disabled:hover:scale-[1] flex flex-col justify-center items-center h-auto"
-                      >
-                        <small className="font-normal">Bond</small> <span className="uppercase -mt-1">Yes</span>
-                        {stage === Stages.Dispute ? (
-                          <div className="absolute top-0 w-[100%] h-full bg-shimmer-gradient opacity-70 animate-shimmer"></div>
-                        ) : (
-                          <></>
-                        )}
-                      </button>
-
-                      <button
-                        onClick={() => {
-                          setSide('no');
-                          setTradeType('bond');
-                        }}
-                        // TODO: set disabled once ready
-                        disabled={stage === Stages.Bet}
-                        className="no-button relative bg-purple-700 text-white px-6 py-0.5 rounded-md hover:bg-purple-500 transition-colors duration-200 ease-in-out hover:scale-[1.02] disabled:hover:scale-[1] flex flex-col justify-center items-center h-auto"
-                      >
-                        <small className="font-normal">Bond</small> <span className="uppercase -mt-1">No</span>
-                        {stage === Stages.Dispute ? (
-                          <div className="absolute top-0 w-[100%] h-full bg-shimmer-gradient opacity-70 animate-shimmer"></div>
-                        ) : (
-                          <></>
-                        )}
-                      </button>
-                    </div>
-                  )}
+                  <div className="relative w-full h-1 bg-border rounded-full overflow-hidden">
+                    <div className="absolute left-0 top-0 h-full bg-[#265CFF]/10" style={{ width: `50%` }}></div>
+                    <div className="absolute right-0 top-0 h-full bg-[#AA00FF]/10" style={{ width: `50%` }}></div>
+                  </div>
                 </div>
               </>
-            );
-          }
-        })()}
-      </CardContent>
-    </div>
+
+          </div>
   );
 }

@@ -6,9 +6,11 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function formatNumber(value: number | BigInt, options?: Intl.NumberFormatOptions) {
+export function formatNumber(value: number | BigInt, decimals?: number, options?: Intl.NumberFormatOptions) {
   return new Intl.NumberFormat('en-US', {
     style: 'decimal',
+    minimumFractionDigits: decimals ?? 1,
+    maximumFractionDigits: decimals ?? 1,
     ...options,
   }).format(Number(value));
 }

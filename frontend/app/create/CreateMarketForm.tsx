@@ -27,7 +27,7 @@ export default function CreateMarketForm({ className, ...props }: HTMLAttributes
       title: '',
       context: '',
       bondingTime: new Date(),
-      creatorFee: 5,
+      creatorFee: 0,
     },
   });
 
@@ -89,7 +89,7 @@ export default function CreateMarketForm({ className, ...props }: HTMLAttributes
             <FormItem>
               <FormLabel>Title</FormLabel>
               <FormControl>
-                <Input placeholder="Will Trump be the next President?" {...field} />
+                <Input placeholder="Will BonderMarket do well at the Base Buildathon" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -102,7 +102,7 @@ export default function CreateMarketForm({ className, ...props }: HTMLAttributes
             <FormItem>
               <FormLabel>Context</FormLabel>
               <FormControl>
-                <Textarea placeholder="Donald Trump wins the 2024 US Presidential Election." {...field} />
+                <Textarea placeholder="Market resolve to Yes if BonderMarket wins some ETH" {...field} />
               </FormControl>
               <FormDescription className="flex justify-between items-end">
                 We will automatically prefix every new lines with numbered.
@@ -126,7 +126,7 @@ export default function CreateMarketForm({ className, ...props }: HTMLAttributes
           name="bondingTime"
           render={({ field }) => (
             <FormItem className="flex flex-col">
-              <FormLabel>Expiry Time</FormLabel>
+              {/* <FormLabel>Expiry Time</FormLabel> */}
               <Popover>
                 <PopoverTrigger asChild>
                   <FormControl>
@@ -175,7 +175,7 @@ export default function CreateMarketForm({ className, ...props }: HTMLAttributes
             </FormItem>
           )}
         />
-        <FormField
+        {/* <FormField
           control={form.control}
           name="image"
           render={({ field }) => (
@@ -191,7 +191,7 @@ export default function CreateMarketForm({ className, ...props }: HTMLAttributes
               <FormMessage />
             </FormItem>
           )}
-        />
+        /> 
         <FormField
           control={form.control}
           name="creatorFee"
@@ -212,7 +212,8 @@ export default function CreateMarketForm({ className, ...props }: HTMLAttributes
               <FormMessage />
             </FormItem>
           )}
-        />
+        /> */}
+
 
         <footer className="flex justify-end gap-2">
           <Button type="submit" disabled={isLoading || isPending}>
