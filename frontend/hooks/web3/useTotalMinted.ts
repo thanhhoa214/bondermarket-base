@@ -1,36 +1,22 @@
+import { USDC_DECIMALS } from '@/lib/web3/erc20';
 import { bonderUsdcAbi } from '@/lib/web3/generated';
 import { Address, formatUnits } from 'viem';
 import { createUseReadContract } from 'wagmi/codegen';
 
 /**
- * Amount of ERC20 token for the given tracking address.
+ * Total supply of tokens minted.
  * Amount means already formatted in human readable format with processed decimals.
+ * Be aware that this uses the USDC_DECIMALS constant to format the amount.
  */
-export const useTotalMinted = (erc20Address?: string, trackingAddress?: Address) => {
-  // const { data: decimals } = createUseReadContract({
-  //   abi: bonderUsdcAbi,
-  //   address: erc20Address as Address | undefined,
-  //   functionName: 'decimals',
-  // })({ query: { enabled: !!erc20Address } });
-
-  const { data: rawBalance, ...rest } = createUseReadContract({
-    abi: bonderUsdcAbi,
-    address: erc20Address as Address | undefined,
-    functionName: 'balanceOf',
-  })({ args: [trackingAddress!], query: { enabled: !!erc20Address && !!trackingAddress } });
-
-  const balance = rawBalance === undefined ? undefined : Number(formatUnits(rawBalance, Number(18)));
-  
-  const { data: rawTotalMinted } = createUseReadContract({
+export const useTotalMinted = (erc20Address?: string) => {
+  const { data: rawTotalMinted, ...rest } = createUseReadContract({
     abi: bonderUsdcAbi,
     address: erc20Address as Address | undefined,
     functionName: 'totalMinted',
   })({ query: { enabled: !!erc20Address } });
 
-  const totalMinted = rawTotalMinted === undefined ? undefined : Number(formatUnits(rawTotalMinted, Number(18)));
+  const totalMinted =
+    rawTotalMinted === undefined ? undefined : Number(formatUnits(rawTotalMinted, Number(USDC_DECIMALS)));
 
-  
-  return { data: balance, totalMinted, ...rest };
+  return { data: totalMinted, ...rest };
 };
-
-

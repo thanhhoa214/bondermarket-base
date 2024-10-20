@@ -1,19 +1,15 @@
 'use client';
-import { Badge } from '@/components/ui/badge';
-import { CardContent } from '@/components/ui/card';
-import { ChartConfig, ChartContainer } from '@/components/ui/chart';
+import { ChartConfig } from '@/components/ui/chart';
 import { useSide } from '@/hooks/useSide';
 import { formatNumber } from '@/lib/utils';
-import { PolarRadiusAxis, RadialBar, RadialBarChart } from 'recharts';
 import MarketCardPurchase from './MarketCardPurchase';
 // import Seesaw from "./Seesaw2";
 // import MarketCardButtons from "./MarketCardButtons2";
 // import ButtonWithSparkles from "@/components/ui2/SparkleButton";
+import { Button } from '@/components/ui/button';
 import { useTradeType } from '@/hooks/useTradeType';
 import { Stages } from '@/lib/web3/market';
-import { motion } from 'framer-motion';
 import { CircleAlert, CircleCheck, CircleHelp, CircleX } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 
 // export type Choice = 'yes' | 'no';
 // export type CardType = 'bet' | 'bond';
@@ -175,71 +171,69 @@ export default function MarketCardContent({
 
   return (
     <div className="relative flex flex-col justify-center items-center py-2">
-            
-          {/* <MarketCardContent betData={betData} bondData={bondData} phase={phase} /> */}
-            {/* TODO: Only styled Bet for now. To style below later */}
-              <>
-                <div className="flex flex-col justify-center items-center mb-2">
-                  <span className={`text-2xl font-bold text-end ${yesPercentage >= 50 ? 'text-positive' : 'text-negative'}`}>{formatNumber(yesPercentage)}</span>
-                  <span className="text-xs text-muted-foreground">% chance</span>
-                </div>
+      {/* <MarketCardContent betData={betData} bondData={bondData} phase={phase} /> */}
+      {/* TODO: Only styled Bet for now. To style below later */}
+      <>
+        <div className="flex flex-col justify-center items-center mb-2">
+          <span className={`text-2xl font-bold text-end ${yesPercentage >= 50 ? 'text-positive' : 'text-negative'}`}>
+            {formatNumber(yesPercentage)}
+          </span>
+          <span className="text-xs text-muted-foreground">% chance</span>
+        </div>
 
-                <div className="w-[320px] flex flex-col gap-2">
-                  
-                  <div>
-                  <div className="w-full flex justify-between items-center pointer-events-none z-20 opacity-20 transition-opacity duration-300">
-                    <span className="text-xs text-positive" >
-                      {formatNumber(yesPercentage)}
-                    </span>
-                    <span className="text-xs text-negative" >
-                      {formatNumber(noPercentage)}
-                    </span>
-                  </div>
-                  <div className="relative w-full h-2 bg-border rounded-full overflow-hidden group">
-                    <div className={`absolute left-0 top-0 h-full ${yesPercentage >= 50 ? 'bg-positive' : 'bg-positive/10'}`} style={{ width: `${yesPercentage}%` }}></div>
-                    <div className={`absolute right-0 top-0 h-full ${yesPercentage >= 50 ? 'bg-negative/10' : 'bg-negative'}`} style={{ width: `${noPercentage}%` }}></div>
-                  
-                  
-                  </div>
-                  </div>
-                  <div className="grid grid-cols-2 gap-2">
-                    <Button
-                      // disabled={true}
-                      variant="yes"
-                      size="bet"
-                      onClick={() => {
-                        setSide('yes');
-                        setTradeType('bet');
-                      }}
-                    >
-                      <div className="flex flex-col">
-                        <span className="block relative top-1">Yes</span>
-                        <span className="block text-[9px]">${Number(yesTotalMinted) * 10**12}</span>
-                      </div>
-                    </Button>
-                    <Button
-                      // disabled={true}
-                      variant="no"
-                      size="bet"
-                      onClick={() => {
-                        setSide('no');
-                        setTradeType('bet');
-                      }}
-                    >
-                      <div className="flex flex-col">
-                        <span className="block relative top-1">No</span>
-                        <span className="block text-[9px]">${Number(noTotalMinted) * 10**12}</span>
-                      </div>
-                    </Button>
-                  </div>
-
-                  <div className="relative w-full h-1 bg-border rounded-full overflow-hidden">
-                    <div className="absolute left-0 top-0 h-full bg-[#265CFF]/10" style={{ width: `50%` }}></div>
-                    <div className="absolute right-0 top-0 h-full bg-[#AA00FF]/10" style={{ width: `50%` }}></div>
-                  </div>
-                </div>
-              </>
-
+        <div className="w-[320px] flex flex-col gap-2">
+          <div>
+            <div className="w-full flex justify-between items-center pointer-events-none z-20 opacity-20 transition-opacity duration-300">
+              <span className="text-xs text-positive">{formatNumber(yesPercentage)}</span>
+              <span className="text-xs text-negative">{formatNumber(noPercentage)}</span>
+            </div>
+            <div className="relative w-full h-2 bg-border rounded-full overflow-hidden group">
+              <div
+                className={`absolute left-0 top-0 h-full ${yesPercentage >= 50 ? 'bg-positive' : 'bg-positive/10'}`}
+                style={{ width: `${yesPercentage}%` }}
+              ></div>
+              <div
+                className={`absolute right-0 top-0 h-full ${yesPercentage >= 50 ? 'bg-negative/10' : 'bg-negative'}`}
+                style={{ width: `${noPercentage}%` }}
+              ></div>
+            </div>
           </div>
+          <div className="grid grid-cols-2 gap-2">
+            <Button
+              // disabled={true}
+              variant="yes"
+              size="bet"
+              onClick={() => {
+                setSide('yes');
+                setTradeType('bet');
+              }}
+            >
+              <div className="flex flex-col">
+                <span className="block relative top-1">Yes</span>
+                <span className="block text-[9px]">${Number(yesTotalMinted)}</span>
+              </div>
+            </Button>
+            <Button
+              variant="no"
+              size="bet"
+              onClick={() => {
+                setSide('no');
+                setTradeType('bet');
+              }}
+            >
+              <div className="flex flex-col">
+                <span className="block relative top-1">No</span>
+                <span className="block text-[9px]">${Number(noTotalMinted)}</span>
+              </div>
+            </Button>
+          </div>
+
+          <div className="relative w-full h-1 bg-border rounded-full overflow-hidden">
+            <div className="absolute left-0 top-0 h-full bg-[#265CFF]/10" style={{ width: `50%` }}></div>
+            <div className="absolute right-0 top-0 h-full bg-[#AA00FF]/10" style={{ width: `50%` }}></div>
+          </div>
+        </div>
+      </>
+    </div>
   );
 }

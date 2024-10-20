@@ -8,7 +8,7 @@ export default function HomeMarketCard({ serverMarkets }: { serverMarkets: Marke
 
   return (
     <section>
-      <ul className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+      <ul className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
         {markets.map((marketDetail) => (
           <MarketCard key={marketDetail.market.betId.toString()} marketDetail={marketDetail} />
         ))}

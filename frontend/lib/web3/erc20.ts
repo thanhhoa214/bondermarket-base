@@ -3,6 +3,7 @@ import { formatUnits } from 'viem';
 import { moneyFormatter } from '../utils';
 
 export const zero = BigInt(0);
+export const USDC_DECIMALS = 6;
 
 export interface TransferData {
   timestamp: number;

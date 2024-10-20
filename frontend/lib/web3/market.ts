@@ -32,8 +32,10 @@ export async function getMarkets() {
     functionName: 'totalBets',
   });
 
+  const latestBetId = Number(betId);
+
   //   send multiple read requests to get bet details from 0 to betId
-  return Promise.all(Array.from({ length: Number(betId) }, (_, i) => getMarketById(Number(betId) - i)));
+  return Promise.all(Array.from({ length: latestBetId }, (_, i) => getMarketById(latestBetId - i)));
 }
 
 export async function getMarketById(id: number) {

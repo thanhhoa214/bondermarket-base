@@ -1,5 +1,5 @@
 import { ErrorCode, MetamaskErrorCode, TxError } from '@/lib/errors/error-dictionary';
-import { zero } from '@/lib/web3/erc20';
+import { USDC_DECIMALS, zero } from '@/lib/web3/erc20';
 import { bonderUsdcConfig, useReadBonderUsdcAllowance, useReadBonderUsdcBalanceOf } from '@/lib/web3/generated';
 import { wagmiClientConfig } from '@/lib/web3/wagmiConfig';
 import { waitForTransactionReceipt, writeContract } from '@wagmi/core';
@@ -23,7 +23,6 @@ export function useRetryInsufficientFund({
   const [pending, setPending] = useState(false);
 
   const { address, isConnected } = useAccount();
-  const decimals = 18;
   const { data: approvalAmount } = useReadBonderUsdcAllowance({
     args: [address!, approvalAddress],
     query: { enabled: !!address },
@@ -38,7 +37,7 @@ export function useRetryInsufficientFund({
 
     if (amount <= 0) return ErrorCode.INVALID_AMOUNT;
     setPending(true);
-    const parsedAmount = parseUnits(amount.toString(), decimals);
+    const parsedAmount = parseUnits(amount.toString(), USDC_DECIMALS);
 
     try {
       if ((approvalAmount || zero) < parsedAmount) {

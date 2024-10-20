@@ -3,18 +3,16 @@ import { bonderV1YesNoFactoryConfig } from '@/lib/web3/generated';
 import { Market } from '@/lib/web3/market';
 import { wagmiClientConfig } from '@/lib/web3/wagmiConfig';
 import { writeContract } from '@wagmi/core';
+import type { Side } from '../useSide';
 import { useSide } from '../useSide';
 import { useRetryInsufficientFund } from './useRetryInsufficientFund';
-import type { Side } from '../useSide';
 
-export function useRetryTrade(
-  { marketId, boughtSide }: { marketId: Market['betId'], boughtSide: Side }
-) {
-  // const [side, setSide] = useSide('yes');
+export function useRetryTrade({ marketId, defaultSide = 'yes' }: { marketId: Market['betId']; defaultSide?: Side }) {
+  const [side, setSide] = useSide(defaultSide);
   const { amount, setAmount, handleBuy, pending } = useRetryInsufficientFund({
     approvalAddress: bonderV1YesNoFactoryConfig.address,
     writeTx: (amount) => {
-      const functionName = boughtSide === 'yes' ? 'buyYes' : 'buyNo';
+      const functionName = side === 'yes' ? 'buyYes' : 'buyNo';
 
       return writeContract(wagmiClientConfig, {
         ...bonderV1YesNoFactoryConfig,
@@ -24,5 +22,5 @@ export function useRetryTrade(
     },
   });
 
-  return { boughtSide, amount, setAmount, pending, handleBuy };
+  return { side, setSide, amount, setAmount, pending, handleBuy };
 }

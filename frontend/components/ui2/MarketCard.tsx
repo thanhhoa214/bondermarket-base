@@ -1,18 +1,10 @@
 'use client';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card, CardTitle } from '@/components/ui/card';
-import { Switch } from '@/components/ui/switch';
-import { MarketDetail, Stages } from '@/lib/web3/market';
-import Link from 'next/link';
-import { HTMLAttributes, useState } from 'react';
-import MarketCardStage from './MarketCardStage';
 import { useTotalMinted } from '@/hooks/web3/useTotalMinted';
-import {formatNumber} from '@/lib/utils';
+import { formatNumber } from '@/lib/utils';
+import { MarketDetail } from '@/lib/web3/market';
 import Image from 'next/image';
-import { Button } from '@/components/ui/button';
-import { useSide } from '@/hooks/useSide';
-import { useTradeType } from '@/hooks/useTradeType';
-import MarketCardPurchase from './MarketCardPurchase';
+import { HTMLAttributes } from 'react';
 import MarketCardContent from './MarketCardContent';
 
 export default function MarketCard({
@@ -24,69 +16,60 @@ export default function MarketCard({
   const { betId, phase, yesToken, noToken } = market;
   const title = metadata.title || 'Untitled Market';
 
-  const { totalMinted: yesTotalMinted } = useTotalMinted(yesToken);
-  const { totalMinted: noTotalMinted } = useTotalMinted(noToken);
-  const totalDeposited = ((yesTotalMinted || 0) + (noTotalMinted || 0));
-  
-  console.log(yesTotalMinted, noTotalMinted, totalDeposited);
-  const yesPercentage = (Number(yesTotalMinted) / Number(totalDeposited)) * 100 || 0;
-  const noPercentage = (Number(noTotalMinted) / Number(totalDeposited)) * 100 || 0;
-  
-  const [side, setSide] = useSide();
-  const [tradeType, setTradeType] = useTradeType();
+  const { data: yesTotalMinted = 0 } = useTotalMinted(yesToken);
+  const { data: noTotalMinted = 0 } = useTotalMinted(noToken);
+  const totalDeposited = yesTotalMinted + noTotalMinted || 1;
 
-
-
+  const yesPercentage = (Number(yesTotalMinted) / Number(totalDeposited)) * 100;
+  const noPercentage = (Number(noTotalMinted) / Number(totalDeposited)) * 100;
 
   return (
-    
-    <Card 
-    {...cardProps}
-    className="flex flex-col overflow-hidden border-2 mt-[0.5rem] min-w-[340px] bg-gradient-to-r from-zinc-800/10 to-zinc-600/10">
-        {/* Div 1: Image, Title, and Bets */}
-        <div className="relative shadow-sm overflow-hidden">
-          <div className="py-2 px-4 h-[80px] flex justify-between overflow-hidden gap-2 items-center">
-            <div className="w-[40px] h-[40px] relative rounded-sm overflow-hidden">
-              <Image className="object-cover" src={metadata.image} alt="" width={40} height={40} />
-            </div>
-            
-            {/* If Bet - Will. Else - Did. Claim - Trump did win? */}
-            <CardTitle className="border-b text-sm font-semibold">
-              <p className="transition-all w-[240px] duration-300 ease-in-out text-left p-2">
-                {title}
-              </p>
-            </CardTitle>
+    <Card
+      {...cardProps}
+      className="flex flex-col overflow-hidden border-2 mt-[0.5rem] min-w-[340px] bg-gradient-to-r from-zinc-800/10 to-zinc-600/10"
+    >
+      {/* Div 1: Image, Title, and Bets */}
+      <div className="relative shadow-sm overflow-hidden">
+        <div className="py-2 px-4 h-[80px] flex justify-between overflow-hidden gap-2 items-center">
+          <div className="shrink-0 w-10 aspect-square relative rounded-sm overflow-hidden">
+            <Image className="object-cover" fill src={metadata.image} alt={metadata.title} />
+          </div>
 
-            {/* Bet amount */}
-            <div className="flex flex-col justify-center items-center">
-              <div className="text-xs">${formatNumber(totalDeposited * 10**12, 0)}</div>
-              <div className="text-[10px]">Bet</div>
-            </div>
+          {/* If Bet - Will. Else - Did. Claim - Trump did win? */}
+          <CardTitle className="border-b text-sm font-semibold w-60 line-clamp-2">{title}</CardTitle>
+
+          {/* Bet amount */}
+          <div className="shrink-0 text-center">
+            <p className="text-xs">${formatNumber(totalDeposited, 0)}</p>
+            <p className="text-[10px]">Bet</p>
           </div>
         </div>
+      </div>
 
-        {/* Div 2: MarketCardContent */}
-        <div className="overflow-auto min-h-[160px]">
-          <MarketCardContent
+      {/* Div 2: MarketCardContent */}
+      <div className="overflow-auto min-h-[160px]">
+        <MarketCardContent
           betId={betId}
           yesPercentage={yesPercentage}
           noPercentage={noPercentage}
-          yesTotalMinted  ={yesTotalMinted || 0}
+          yesTotalMinted={yesTotalMinted || 0}
           noTotalMinted={noTotalMinted || 0}
           phase={phase}
-          />
+        />
+      </div>
+
+      {/* Div 3: Grey text beneath */}
+      <div className="bottom-0 text-sm border-t flex items-center justify-between py-2 px-4">
+        <div className="flex items-center text-xs flex-row gap-2">
+          <span className={`text-highlight`}>Bet</span>
+          {'>'}
+          <span className={`'text-muted-foreground'}`}>Validate</span>
+          {'>'}
+          <span className={`'text-muted-foreground'}`}>Dispute</span>
+          {'>'}
+          <span className={`'text-muted-foreground'}`}>Claim</span>
         </div>
-        
-        {/* Div 3: Grey text beneath */}
-        <div className="bottom-0 text-sm border-t flex items-center justify-between py-2 px-4">
-          <div className="flex items-center text-xs flex-row gap-2">
-            <span className={`text-highlight`}>Bet</span>{">"}
-            <span className={`'text-muted-foreground'}`}>Validate</span>{">"}
-            <span className={`'text-muted-foreground'}`}>Dispute</span>{">"}
-            <span className={`'text-muted-foreground'}`}>Claim</span>
-            
-          </div>
-          {/* <div className="text-xs">
+        {/* <div className="text-xs">
             {data.cutoffTime ? (
               new Date(data.cutoffTime).getTime() - Date.now() > 3600000 ? (
                 format(data.cutoffTime, 'PPp')
@@ -97,11 +80,11 @@ export default function MarketCard({
               'Not set'
             )}
           </div> */}
-          <div className="text-xs">
-            {/* TODO: To add and fix the cutoff time */}
+        <div className="text-xs">
+          {/* TODO: To add and fix the cutoff time */}
           {/* {expiry_time ? format(expiry_time, 'PP') : 'Not set'} */}
-            {/* {data.cutoffTime ? format(data.cutoffTime, 'PPp') : 'Not set'} */}
-            {/* {data.cutoffTime ? (
+          {/* {data.cutoffTime ? format(data.cutoffTime, 'PPp') : 'Not set'} */}
+          {/* {data.cutoffTime ? (
               new Date(data.cutoffTime).getTime() - Date.now() > 3600000 ? (
                 format(data.cutoffTime, 'PPp')
               ) : (
@@ -110,10 +93,9 @@ export default function MarketCard({
             ) : (
               'Not set'
             )} */}
-
-          </div>        
         </div>
-      </Card>
+      </div>
+    </Card>
   );
 
   // return (
