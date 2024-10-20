@@ -18,10 +18,10 @@ export default function MarketCard({
 
   const { data: yesTotalMinted = 0 } = useTotalMinted(yesToken);
   const { data: noTotalMinted = 0 } = useTotalMinted(noToken);
-  const totalDeposited = yesTotalMinted + noTotalMinted || 1;
+  const totalDeposited = yesTotalMinted + noTotalMinted;
 
-  const yesPercentage = (Number(yesTotalMinted) / Number(totalDeposited)) * 100;
-  const noPercentage = (Number(noTotalMinted) / Number(totalDeposited)) * 100;
+  const yesPercentage = (Number(yesTotalMinted) / Number(totalDeposited)) * 100 || 0;
+  const noPercentage = (Number(noTotalMinted) / Number(totalDeposited)) * 100 || 0;
 
   return (
     <Card
