@@ -20,7 +20,7 @@ import { parseUnits } from 'viem';
 import { waitForTransactionReceipt } from 'wagmi/actions';
 import { generateMarketDetail } from '../actions/ai/generateMarketDetail';
 import { createMarket, refreshMarketPage } from '../actions/market.actions';
-import { createMarketSchema, CreateMarketSchema } from './util';
+import { ACCEPTED_IMAGE_TYPES, createMarketSchema, CreateMarketSchema } from './util';
 
 export default function CreateMarketForm({ className, ...props }: HTMLAttributes<HTMLFormElement>) {
   const form = useForm<CreateMarketSchema>({
@@ -194,7 +194,7 @@ export default function CreateMarketForm({ className, ...props }: HTMLAttributes
               <FormMessage />
             </FormItem>
           )}
-        /> 
+        />
         <FormField
           control={form.control}
           name="creatorFee"
@@ -219,9 +219,7 @@ export default function CreateMarketForm({ className, ...props }: HTMLAttributes
         />
 
         <footer className="flex justify-end gap-2">
-          <Button type="submit" 
-          disabled={isLoading || isPending}
-          >
+          <Button type="submit" disabled={isLoading || isPending}>
             {isLoading || isPending ? <Loader2 className="animate-spin" /> : 'Create market'}
           </Button>
         </footer>
