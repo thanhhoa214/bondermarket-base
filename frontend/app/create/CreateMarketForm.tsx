@@ -8,17 +8,19 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Textarea } from '@/components/ui/textarea';
 import { cn, today } from '@/lib/utils';
 import { useReadBonderV1CreatorNftCreatorFeeCap, useWriteBonderV1YesNoFactoryCreateBet } from '@/lib/web3/generated';
+import { wagmiClientConfig } from '@/lib/web3/wagmiConfig';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { format } from 'date-fns';
 import { Calendar as CalendarIcon, Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { HTMLAttributes, useEffect, useState } from 'react';
+import { HTMLAttributes, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { parseUnits } from 'viem';
+import { waitForTransactionReceipt } from 'wagmi/actions';
 import { generateMarketDetail } from '../actions/ai/generateMarketDetail';
-import { createMarket } from '../actions/market.actions';
-import { ACCEPTED_IMAGE_TYPES, createMarketSchema, CreateMarketSchema } from './util';
+import { createMarket, refreshMarketPage } from '../actions/market.actions';
+import { createMarketSchema, CreateMarketSchema } from './util';
 
 export default function CreateMarketForm({ className, ...props }: HTMLAttributes<HTMLFormElement>) {
   const form = useForm<CreateMarketSchema>({
@@ -32,20 +34,10 @@ export default function CreateMarketForm({ className, ...props }: HTMLAttributes
   });
 
   const { data: feeCap = 0 } = useReadBonderV1CreatorNftCreatorFeeCap();
-  const { writeContract, data, isPending, isSuccess, error } = useWriteBonderV1YesNoFactoryCreateBet();
+  const { writeContractAsync, isPending } = useWriteBonderV1YesNoFactoryCreateBet();
   const [isLoading, setIsLoading] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
   const router = useRouter();
-
-  useEffect(() => {
-    if (!isSuccess) return;
-    toast.success(`Market created with tx ${data}`);
-    router.push('/');
-  }, [router, isSuccess, form, data]);
-
-  useEffect(() => {
-    if (error) toast.error(`Error: ${error.message}`);
-  }, [error]);
 
   const onSubmit = async (values: CreateMarketSchema) => {
     if (isGenerating || isLoading || isPending) return;
@@ -63,8 +55,19 @@ export default function CreateMarketForm({ className, ...props }: HTMLAttributes
       context,
       image: imageAsBase64,
     });
-    writeContract({ args: [ipfsCid, BigInt(bondingTime.getTime()), parseUnits(creatorFee.toString(), 18)] });
-    setIsLoading(false);
+    try {
+      const txHash = await writeContractAsync({
+        args: [ipfsCid, BigInt(bondingTime.getTime()), parseUnits(creatorFee.toString(), 18)],
+      });
+      await waitForTransactionReceipt(wagmiClientConfig, { hash: txHash });
+      refreshMarketPage();
+      toast.success(`Market created with tx ${txHash}`);
+      router.push('/');
+      setIsLoading(false);
+    } catch (error) {
+      toast.error(`Error: ${(error as any).message}`);
+      setIsLoading(false);
+    }
   };
 
   const generateMarket = async () => {
@@ -214,7 +217,6 @@ export default function CreateMarketForm({ className, ...props }: HTMLAttributes
             </FormItem>
           )}
         />
-
 
         <footer className="flex justify-end gap-2">
           <Button type="submit" 
