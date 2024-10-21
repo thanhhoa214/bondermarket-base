@@ -175,7 +175,7 @@ export default function CreateMarketForm({ className, ...props }: HTMLAttributes
             </FormItem>
           )}
         />
-        {/* <FormField
+        <FormField
           control={form.control}
           name="image"
           render={({ field }) => (
@@ -202,6 +202,7 @@ export default function CreateMarketForm({ className, ...props }: HTMLAttributes
               </FormLabel>
               <FormControl>
                 <Input
+                  disabled={true}
                   type="number"
                   {...field}
                   min={0}
@@ -212,11 +213,13 @@ export default function CreateMarketForm({ className, ...props }: HTMLAttributes
               <FormMessage />
             </FormItem>
           )}
-        /> */}
+        />
 
 
         <footer className="flex justify-end gap-2">
-          <Button type="submit" disabled={isLoading || isPending}>
+          <Button type="submit" 
+          disabled={isLoading || isPending}
+          >
             {isLoading || isPending ? <Loader2 className="animate-spin" /> : 'Create market'}
           </Button>
         </footer>
